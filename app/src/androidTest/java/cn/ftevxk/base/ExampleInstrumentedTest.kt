@@ -53,8 +53,8 @@ class ExampleInstrumentedTest {
         key222.forEach { logStr.append("type = ${it.javaClass.simpleName}, value = $it\n") }
         logStr.append("================ getSpValue(333) Success ================\n")
         key333.forEach {
-            logStr.append("keyType = ${it.key.javaClass.simpleName}, keyValue = ${it.key}\n")
-            logStr.append("valueType = ${it.value.javaClass.simpleName}, valueValue = ${it.value}\n\n")
+            logStr.append("{${it.key} = ${it.value}}\t\t")
+            logStr.append("keyType = ${it.key.javaClass.simpleName}, valueType = ${it.value.javaClass.simpleName}\n")
         }
         dLog(logStr.toString())
     }
