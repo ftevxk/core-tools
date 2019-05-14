@@ -1,10 +1,10 @@
 package cn.ftevxk.base
 
-import android.util.Log
 import androidx.test.rule.ActivityTestRule
 import cn.ftevxk.base.extension.getSpValue
 import cn.ftevxk.base.extension.putSpValue
 import cn.ftevxk.base.extension.removeSpKey
+import com.pawegio.kandroid.d
 import org.junit.Rule
 import org.junit.Test
 
@@ -32,38 +32,37 @@ class ExampleInstrumentedTest {
     }
 
     private fun testPutSpValue() {
-        activity.putSpValue("111", mutableListOf(true, 0.11f, 0.22, "666", 111, 222L))
-        activity.putSpValue("222", mutableMapOf(true to 0.11f, "666" to 111))
-        Log.d("class=>ExampleInstrumentedTest", "testPutSpValue(ExampleInstrumentedTest.kt:" +
-                "${Throwable().stackTrace[0].lineNumber})\n" +
-                "putSpValue Success"
+        activity.putSpValue(
+            "111" to 123456.0,
+            "222" to mutableListOf(true, 0.11f, 0.22, "666", 111, 222L),
+            "333" to mutableMapOf(true to 0.11f, "666" to 111)
         )
+        d("putSpValue Success")
     }
 
     private fun testGetSpValue() {
-        val lists = activity.getSpValue("111", mutableListOf<Any>("empty"))
-        var listStr = "getSpValue(111) Success =>\n"
-        lists.forEach { listStr += "type = ${it.javaClass.simpleName}, value = $it\n" }
-        Log.d("class=>ExampleInstrumentedTest", "testGetSpValue(ExampleInstrumentedTest.kt:" +
-                "${Throwable().stackTrace[0].lineNumber})\n" + listStr)
+        val key111 = activity.getSpValue("111", 0.0)
+        val key222 = activity.getSpValue("222", mutableListOf<Any>("empty"))
+        val key333 = activity.getSpValue("333", mutableMapOf<Any, Any>("empty" to ""))
 
-
-        val maps = activity.getSpValue("222", mutableMapOf<Any, Any>("" to "empty"))
-        var mapStr = "getSpValue(222) Success => $maps\n"
-        maps.forEach {
-            mapStr += "keyType = ${it.key.javaClass.simpleName}, keyValue = ${it.key}; " +
-                    "valueType = ${it.value.javaClass.simpleName}, valueValue = ${it.value}\n"
+        val logStr = StringBuilder()
+        logStr.append(" \n")
+        logStr.append("================ getSpValue(111) Success ================\n")
+        logStr.append("type = ${key111.javaClass.simpleName}, value = $key111\n")
+        logStr.append("================ getSpValue(222) Success ================\n")
+        key222.forEach { logStr.append("type = ${it.javaClass.simpleName}, value = $it\n") }
+        logStr.append("================ getSpValue(333) Success ================\n")
+        key333.forEach {
+            logStr.append("keyType = ${it.key.javaClass.simpleName}, keyValue = ${it.key}\n")
+            logStr.append("valueType = ${it.value.javaClass.simpleName}, valueValue = ${it.value}\n\n")
         }
-        Log.d("class=>ExampleInstrumentedTest", "testGetSpValue(ExampleInstrumentedTest.kt:" +
-                "${Throwable().stackTrace[0].lineNumber})\n$mapStr")
+        d(logStr.toString())
     }
 
     private fun testRemoveSpValue() {
-        val key1 = activity.removeSpKey("111")
-        val key2 = activity.removeSpKey("222")
-        Log.d("class=>ExampleInstrumentedTest", "testPutSpValue(ExampleInstrumentedTest.kt:" +
-                "${Throwable().stackTrace[0].lineNumber})\n" +
-                "removeSpKey key(111) = $key1, key(222) = $key2"
-        )
+        val key111 = activity.removeSpKey("111")
+        val key222 = activity.removeSpKey("222")
+        val key333 = activity.removeSpKey("333")
+        d("removeSpKey key(111) = $key111, key(222) = $key222, key(333) = $key333")
     }
 }

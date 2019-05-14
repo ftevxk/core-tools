@@ -49,9 +49,9 @@ class MainActivity : AppCompatActivity() {
         //设置点击、长按事件
         binding.recycler.setOnItemClickListener(onItemClickListener = { holder, position, location ->
             //获取item中间文本控件
-            val text = holder.getItemBinding<ItemMainBinding>()?.text
+            val textView = holder.getItemBinding<ItemMainBinding>()?.textView
             //点击控件替换一个随机数字，其余地方toast
-            if (binding.recycler.isClickControlView(text, location)) {
+            if (binding.recycler.isClickControlView(textView, location)) {
                 //拷贝一个仅替换title
                 val model = models[position]
                         .copy(title = Random.nextInt(100).toString())

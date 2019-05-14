@@ -10,46 +10,44 @@ import org.json.JSONObject
 /**
  * 保存数据到SharedPreferences
  */
-fun Context.putSpValue(key: String, value: Any, fileName: String = packageName) {
-    val pref = getSharedPreferences(fileName, Context.MODE_PRIVATE)
-    with(pref.edit()) {
-        when (value) {
-            is Int -> putInt(key, value)
-            is Long -> putLong(key, value)
-            is Float -> putFloat(key, value)
-            is String -> putString(key, value)
-            is Boolean -> putBoolean(key, value)
+fun Context.putSpValue(vararg pairs: Pair<String, Any>, fileName: String = packageName) {
+    val edit = getSharedPreferences(fileName, Context.MODE_PRIVATE).edit()
+    pairs.forEach { pair ->
+        val key = pair.first
+        when (val value = pair.second) {
+            is Int -> edit.putInt(key, value)
+            is Long -> edit.putLong(key, value)
+            is Float -> edit.putFloat(key, value)
+            is String -> edit.putString(key, value)
+            is Boolean -> edit.putBoolean(key, value)
             //Double、JSON类型通过String间接存储
-            is Double, is JSONObject, is JSONArray -> putString(key, value.toString())
+            is Double, is JSONObject, is JSONArray -> edit.putString(key, value.toString())
             is MutableSet<*> -> {
                 if (value.firstOrNull() is String) {
-                    putStringSet(key, value as Set<String>)
+                    edit.putStringSet(key, value as Set<String>)
                 } else {
                     //Set类型不局限于String
                     val sets = mutableSetOf<String>()
                     value.forEach { sets.plus(anyToString(it)) }
-                    putStringSet(key, sets)
+                    edit.putStringSet(key, sets)
                 }
             }
             is MutableList<*> -> {
                 //List类型通过String间接存储
                 val jsonArray = JSONArray()
                 value.forEach { jsonArray.put(anyToString(it)) }
-                putString(key, jsonArray.toString())
+                edit.putString(key, jsonArray.toString())
             }
             is MutableMap<*, *> -> {
                 //Map类型通过String间接存储
                 val jsonObject = JSONObject()
                 value.entries.forEach { jsonObject.put(anyToString(it.key), anyToString(it.value)) }
-                putString(key, jsonObject.toString())
+                edit.putString(key, jsonObject.toString())
             }
-            else -> throw IllegalArgumentException("当前类型不支持!!!")
+            else -> throw Throwable("当前类型不支持!!!")
         }
-    }.apply()
-}
-
-fun Context.putSpValue(vararg pairs: Pair<String, Any>, fileName: String = packageName) {
-    pairs.forEach { putSpValue(it.first, it.second, fileName) }
+    }
+    edit.apply()
 }
 
 /**
@@ -141,15 +139,9 @@ fun Context.clearSpValue(fileName: String = packageName): Boolean {
  * 需要在生命周期内调用，否则context可能为null
  **********************************************************/
 
-fun Fragment.putSpValue(key: String, value: Any, fileName: String? = null) {
-    context?.run {
-        this.putSpValue(key, value, fileName ?: this.packageName)
-    }
-}
-
 fun Fragment.putSpValue(vararg pairs: Pair<String, Any>, fileName: String? = null) {
     context?.run {
-        pairs.forEach { putSpValue(it.first, it.second, fileName) }
+        this.putSpValue(*pairs, fileName = fileName ?: this.packageName)
     }
 }
 
@@ -180,7 +172,7 @@ fun Fragment.clearSpValue(fileName: String? = null): Boolean {
  **********************************************************/
 
 private fun getConvertRegex(type: String, value: String) =
-        "RegexType=$type--RegexValue=$value"
+    "RegexType=$type--RegexValue=$value"
 
 private fun anyToString(any: Any?): String {
     return when (any) {
