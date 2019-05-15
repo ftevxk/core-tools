@@ -38,9 +38,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initData() {
-        //模拟10条数据
-        (0 until 10).forEach {
-            models.add(MainItemModel(title = it.toString()))
+        //模拟20条数据
+        (0 until 20).forEach {
+            models.add(MainItemModel(title = (it + 1).toString()))
         }
         binding.recycler.setItemModels(models)
     }

@@ -21,6 +21,8 @@ class DataBindAdapter : RecyclerView.Adapter<DataBindAdapter.ViewHolder>() {
         mutableListOf<IDataBindItemModel>()
     }
 
+    private var dataBindAdapterListener: SimpleBindAdapterListener? = null
+
     fun <T : IDataBindItemModel> getItemModels() = models as MutableList<T>
 
     /**
@@ -78,7 +80,20 @@ class DataBindAdapter : RecyclerView.Adapter<DataBindAdapter.ViewHolder>() {
         setItemModels(tempModels)
     }
 
+    fun setDataBindAdapterListener(listener: SimpleBindAdapterListener) {
+        this.dataBindAdapterListener = listener
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val binding = DataBindingUtil.inflate<ViewDataBinding>(
+                LayoutInflater.from(parent.context), viewType, parent, false
+        )
+        dataBindAdapterListener?.onCreateViewHolder(binding)
+        return ViewHolder(binding)
+    }
+
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        dataBindAdapterListener?.onBindViewHolderBefore(holder, position)
         val model = models[position]
         if (model.variableId > 0) {
             holder.binding.setVariable(model.variableId, model)
@@ -86,21 +101,51 @@ class DataBindAdapter : RecyclerView.Adapter<DataBindAdapter.ViewHolder>() {
         model.getVariablePairs()?.forEach {
             holder.binding.setVariable(it.first, it.second)
         }
+        dataBindAdapterListener?.onBindViewHolderAfter(holder, position, model)
         //数据改变时立刻刷新UI
         holder.binding.executePendingBindings()
+    }
+
+    override fun onBindViewHolder(holder: ViewHolder, position: Int, payloads: MutableList<Any>) {
+        if (dataBindAdapterListener?.onBindViewHolder(holder, position, payloads) != true){
+            super.onBindViewHolder(holder, position, payloads)
+        }
+    }
+
+    override fun onViewAttachedToWindow(holder: ViewHolder) {
+        super.onViewAttachedToWindow(holder)
+        dataBindAdapterListener?.onViewAttachedToWindow(holder)
+    }
+
+    override fun onViewDetachedFromWindow(holder: ViewHolder) {
+        super.onViewDetachedFromWindow(holder)
+        dataBindAdapterListener?.onViewDetachedFromWindow(holder)
+    }
+
+    override fun onViewRecycled(holder: ViewHolder) {
+        super.onViewRecycled(holder)
+        dataBindAdapterListener?.onViewRecycled(holder)
+    }
+
+    override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
+        super.onAttachedToRecyclerView(recyclerView)
+        dataBindAdapterListener?.onAttachedToRecyclerView(recyclerView)
+    }
+
+    override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
+        super.onDetachedFromRecyclerView(recyclerView)
+        dataBindAdapterListener?.onDetachedFromRecyclerView(recyclerView)
+    }
+
+    override fun onFailedToRecycleView(holder: ViewHolder): Boolean {
+        val result = dataBindAdapterListener?.onFailedToRecycleView(holder)
+        return result ?: super.onFailedToRecycleView(holder)
     }
 
     override fun getItemCount() = models.size
 
     override fun getItemViewType(position: Int): Int {
         return models[position].layoutRes
-    }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding = DataBindingUtil.inflate<ViewDataBinding>(
-                LayoutInflater.from(parent.context), viewType, parent, false
-        )
-        return ViewHolder(binding)
     }
 
     class ViewHolder(val binding: ViewDataBinding) : RecyclerView.ViewHolder(binding.root)

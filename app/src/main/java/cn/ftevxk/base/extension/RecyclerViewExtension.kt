@@ -9,10 +9,12 @@ import android.view.View
 import androidx.core.view.GestureDetectorCompat
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import cn.ftevxk.base.common.DataBindAdapter
 import cn.ftevxk.base.common.IDataBindItemModel
+import cn.ftevxk.base.common.SimpleBindAdapterListener
 
 /****************************************
  * RecyclerView相关扩展
@@ -46,6 +48,7 @@ fun <VDB : ViewDataBinding> RecyclerView.ViewHolder.getItemBinding(): VDB? {
 
 /**
  * 构建简单的列表类型RecyclerView
+ * 分割线仅支持LinearLayoutManager
  */
 fun RecyclerView.buildSimpleBindAdapter(divider: Boolean = true) {
     if (adapter == null) {
@@ -55,24 +58,31 @@ fun RecyclerView.buildSimpleBindAdapter(divider: Boolean = true) {
         layoutManager = LinearLayoutManager(context)
     }
     if (divider) {
-        if (layoutManager is LinearLayoutManager) {
+        if (layoutManager is LinearLayoutManager && layoutManager !is GridLayoutManager) {
             addItemDecoration(DividerItemDecoration(context, (layoutManager as LinearLayoutManager).orientation))
         }
     }
 }
 
+fun RecyclerView.getDataBindAdapter(): DataBindAdapter? {
+    return adapter as? DataBindAdapter
+}
+
 fun <T : IDataBindItemModel> RecyclerView.setItemModels(newModels: MutableList<T>) {
-    (adapter as? DataBindAdapter)?.setItemModels(newModels)
+    getDataBindAdapter()?.setItemModels(newModels)
 }
 
 fun <T : IDataBindItemModel> RecyclerView.getItemModels(): MutableList<T>? {
-    return (adapter as? DataBindAdapter)?.getItemModels()
+    return getDataBindAdapter()?.getItemModels()
 }
 
 fun <T : IDataBindItemModel> RecyclerView.setItemModel(model: T, position: Int = -1, additional: Boolean = false) {
-    (adapter as? DataBindAdapter)?.setItemModel(model, position, additional)
+    getDataBindAdapter()?.setItemModel(model, position, additional)
 }
 
+fun RecyclerView.setDataBindAdapterListener(listener: SimpleBindAdapterListener) {
+    getDataBindAdapter()?.setDataBindAdapterListener(listener)
+}
 
 /****************************************
  * (START) 点击事件相关
