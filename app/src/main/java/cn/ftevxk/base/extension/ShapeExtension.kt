@@ -1,10 +1,11 @@
-@file:Suppress("unused", "UNUSED_PARAMETER")
+@file:Suppress("unused", "UNUSED_PARAMETER", "DefaultLocale")
 
 package cn.ftevxk.base.extension
 
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
+import android.view.View
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
 
@@ -49,6 +50,10 @@ fun TextView.setShapeBackground(typeStr: String?, unit: String? = null,
     )
     //设置背景
     this.background = drawable
+    //如果有虚线则关闭硬件加速
+    if (dashWidth != null && dashGap != null) {
+        this.setLayerType(View.LAYER_TYPE_SOFTWARE, null)
+    }
 }
 
 /**
@@ -70,8 +75,8 @@ fun Context.getShapeDrawable(type: ShapeType, solidColor: Int? = null,
     solidColor?.run { drawable.setColor(this) }
     //设置边框
     if (strokeWidth != null && strokeColor != null) {
-        //边框时候是虚线
-        if (dashWidth != null && dashGap != null) {
+        if (dashWidth != null && dashGap != null && dashWidth.toFloat() > 0f) {
+            //边框是虚线的时候
             drawable.setStroke(strokeWidth.toInt(), strokeColor, dashWidth.toFloat(), dashGap.toFloat())
         } else {
             drawable.setStroke(strokeWidth.toInt(), strokeColor)

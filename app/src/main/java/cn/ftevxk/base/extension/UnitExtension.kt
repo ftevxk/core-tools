@@ -1,4 +1,4 @@
-@file:Suppress("unused")
+@file:Suppress("unused", "DefaultLocale")
 
 package cn.ftevxk.base.extension
 
