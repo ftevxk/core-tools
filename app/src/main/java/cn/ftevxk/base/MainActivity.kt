@@ -50,14 +50,14 @@ class MainActivity : AppCompatActivity() {
         binding.recycler.setOnItemClickListener(onItemClickListener = { holder, position, location ->
             //获取item中间文本控件
             val textView = holder.getItemBinding<ItemMainBinding>()?.textView
-            //点击控件替换一个随机数字，其余地方toast
+            //点击控件toast，其余地方替换一个随机数字
             if (binding.recycler.isClickControlView(textView, location)) {
+                toast(textView?.text ?: (position + 1).toString())
+            } else {
                 //拷贝一个仅替换title
                 val model = models[position]
                         .copy(title = Random.nextInt(100).toString())
                 binding.recycler.setItemModel(model, position)
-            } else {
-                toast(position.toString())
             }
         }, onItemLongClickListener = { _, position, _ ->
             //长按弹框询问是否删除
