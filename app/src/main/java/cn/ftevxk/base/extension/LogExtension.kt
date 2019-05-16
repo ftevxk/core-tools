@@ -23,11 +23,11 @@ object LogExtension {
             return "${stackTrace.methodName}(${stackTrace.fileName}:${stackTrace.lineNumber})"
         } else {
             stackTraceElements.forEachIndexed { index, stackTrace ->
-                if (isCurrent && stackTrace.fileName != "LogExtension.kt") {
+                if (isCurrent && stackTrace.fileName != "${javaClass.simpleName}.kt") {
                     stackTraceIndex = index
                     return "${stackTrace.methodName}(${stackTrace.fileName}:${stackTrace.lineNumber})"
                 } else {
-                    if (stackTrace.fileName == "LogExtension.kt") isCurrent = true
+                    if (stackTrace.fileName == "${javaClass.simpleName}.kt") isCurrent = true
                 }
             }
         }
