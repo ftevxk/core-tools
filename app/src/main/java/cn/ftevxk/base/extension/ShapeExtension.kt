@@ -5,7 +5,6 @@ package cn.ftevxk.base.extension
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
-import android.view.View
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
 
@@ -50,10 +49,10 @@ fun TextView.setShapeBackground(typeStr: String?, unit: String? = null,
     )
     //设置背景
     this.background = drawable
-    //如果有虚线则关闭硬件加速
-    if (dashWidth != null && dashGap != null) {
-        this.setLayerType(View.LAYER_TYPE_SOFTWARE, null)
-    }
+//    //如果有虚线则关闭硬件加速，使用出现黑色背景
+//    if (dashWidth != null && dashGap != null) {
+//        this.setLayerType(View.LAYER_TYPE_SOFTWARE, null)
+//    }
 }
 
 /**
