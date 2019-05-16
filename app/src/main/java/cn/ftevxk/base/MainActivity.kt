@@ -5,11 +5,13 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputConnection
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import cn.ftevxk.base.databinding.ActivityMainBinding
 import cn.ftevxk.base.databinding.ItemMainBinding
 import cn.ftevxk.base.extension.*
+import cn.ftevxk.base.widget.InterceptEditText
 import com.pawegio.kandroid.alert
 import com.pawegio.kandroid.toast
 import kotlin.random.Random
@@ -40,7 +42,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initData() {
-        //模拟20条数据
+        //模拟10条数据
         (0 until 10).forEach {
             models.add(MainItemModel(title = (it + 1).toString()))
         }
@@ -97,7 +99,7 @@ class MainActivity : AppCompatActivity() {
                         } else {
                             val index = editText.text.toString().toInt()
                             if (index > models.size) {
-                                toast("输入的位置不能大于${models.size}")
+                                toast("ItemModel插入的位置不能大于${models.size}")
                             } else {
                                 binding.recycler.setItemModel(
                                     MainItemModel(title = "new-${Random.nextInt(100)}"),
@@ -113,11 +115,20 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun getAddEditText(): EditText {
-        val editText = EditText(this)
+        val editText = InterceptEditText(this)
         editText.hint = "输入需要插入的位置，不输入则插入末尾"
         editText.inputType = EditorInfo.TYPE_CLASS_NUMBER
         editText.textSize = 14f
         editText.setMargins(left = 20.toDpUnit().toInt(), right = 20.toDpUnit().toInt())
+        editText.setInterceptListener(object : InterceptEditText.InterceptListener{
+            override fun commitText(target: InputConnection, text: CharSequence, newCursorPosition: Int): Boolean? {
+                if ((editText.text.toString() + text).toInt() > models.size){
+                    toast("ItemModel插入的位置不能大于${models.size}")
+                    return false
+                }
+                return super.commitText(target, text, newCursorPosition)
+            }
+        })
         return editText
     }
 }
