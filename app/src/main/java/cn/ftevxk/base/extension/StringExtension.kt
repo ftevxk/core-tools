@@ -46,3 +46,21 @@ fun ByteArray.md5(): String {
     }
     return sb.toString()
 }
+
+/**
+ * 将String分割成指定大小的数组
+ */
+fun String.splitStr(maxLength: Int = 4 * 1024): Array<String> {
+    var start = 0
+    val strings = Array(this.length / maxLength + 1) { "" }
+    for (i in 0 until strings.size) {
+        if (start + maxLength < this.length) {
+            strings[i] = this.substring(start, start + maxLength)
+            start += maxLength
+        } else {
+            strings[i] = this.substring(start, this.length)
+            start = this.length
+        }
+    }
+    return strings
+}
