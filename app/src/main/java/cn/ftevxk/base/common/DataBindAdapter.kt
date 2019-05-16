@@ -53,13 +53,12 @@ class DataBindAdapter : RecyclerView.Adapter<DataBindAdapter.ViewHolder>() {
      * 移除ItemModel
      */
     fun <T : IDataBindItemModel> removeItemModel(model: T): Int {
-        val index = getItemModels<T>().run {
-            val i = indexOf(model)
-            removeAt(i)
-            return@run i
+        getItemModels<T>().run {
+            val index = indexOf(model)
+            removeAt(index)
+            notifyItemRemoved(index)
+            return index
         }
-        notifyItemRemoved(index)
-        return index
     }
 
     /**
