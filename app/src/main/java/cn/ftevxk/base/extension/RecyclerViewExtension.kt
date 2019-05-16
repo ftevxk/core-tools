@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import cn.ftevxk.base.common.DataBindAdapter
 import cn.ftevxk.base.common.IDataBindItemModel
-import cn.ftevxk.base.common.SimpleBindAdapterListener
 
 /****************************************
  * RecyclerView相关扩展
@@ -80,8 +79,16 @@ fun <T : IDataBindItemModel> RecyclerView.setItemModel(model: T, position: Int =
     getDataBindAdapter()?.setItemModel(model, position, additional)
 }
 
-fun RecyclerView.setDataBindAdapterListener(listener: SimpleBindAdapterListener) {
-    getDataBindAdapter()?.setDataBindAdapterListener(listener)
+fun RecyclerView.setAdapterListener(listener: DataBindAdapter.AdapterListener) {
+    getDataBindAdapter()?.adapterListener = listener
+}
+
+fun <T : IDataBindItemModel> RecyclerView.removeItemModel(model: T): Int?{
+    return getDataBindAdapter()?.removeItemModel(model)
+}
+
+fun <T : IDataBindItemModel> RecyclerView.removeItemModel(index: Int): T?{
+    return getDataBindAdapter()?.removeItemModel(index)
 }
 
 /****************************************

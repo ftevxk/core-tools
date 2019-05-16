@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.view.inputmethod.EditorInfo
+import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import cn.ftevxk.base.databinding.ActivityMainBinding
 import cn.ftevxk.base.databinding.ItemMainBinding
@@ -39,7 +41,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun initData() {
         //模拟20条数据
-        (0 until 20).forEach {
+        (0 until 10).forEach {
             models.add(MainItemModel(title = (it + 1).toString()))
         }
         binding.recycler.setItemModels(models)
@@ -56,7 +58,7 @@ class MainActivity : AppCompatActivity() {
             } else {
                 //拷贝一个仅替换title
                 val model = models[position]
-                        .copy(title = Random.nextInt(100).toString())
+                    .copy(title = Random.nextInt(100).toString())
                 binding.recycler.setItemModel(model, position)
             }
         }, onItemLongClickListener = { _, position, _ ->
@@ -64,8 +66,7 @@ class MainActivity : AppCompatActivity() {
             alert("是否删除该条?") {
                 negativeButton("取消") {}
                 positiveButton("确定") {
-                    models.removeAt(position)
-                    binding.recycler.setItemModels(models)
+                    binding.recycler.removeItemModel<MainItemModel>(position)
                 }
             }.show()
         })
@@ -75,8 +76,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         super.onCreateOptionsMenu(menu)
         menu?.add(0, menuId, 0, "添加")
-                ?.setIcon(android.R.drawable.ic_menu_add)
-                ?.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
+            ?.setIcon(android.R.drawable.ic_menu_add)
+            ?.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
         return true
     }
 
@@ -84,14 +85,39 @@ class MainActivity : AppCompatActivity() {
         when (item?.itemId) {
             menuId -> {
                 alert("是否添加新数据?") {
+                    val editText = getAddEditText()
+                    customView(editText)
                     negativeButton("取消") {}
                     positiveButton("确定") {
-                        models.add(MainItemModel(title = "new-${Random.nextInt(100)}"))
-                        binding.recycler.setItemModels(models)
+                        if (editText.text.isEmpty()) {
+                            binding.recycler.setItemModel(
+                                MainItemModel(title = "new-${Random.nextInt(100)}"),
+                                additional = true
+                            )
+                        } else {
+                            val index = editText.text.toString().toInt()
+                            if (index > models.size) {
+                                toast("输入的位置不能大于${models.size}")
+                            } else {
+                                binding.recycler.setItemModel(
+                                    MainItemModel(title = "new-${Random.nextInt(100)}"),
+                                    index, true
+                                )
+                            }
+                        }
                     }
                 }.show()
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun getAddEditText(): EditText {
+        val editText = EditText(this)
+        editText.hint = "输入需要插入的位置，不输入则插入末尾"
+        editText.inputType = EditorInfo.TYPE_CLASS_NUMBER
+        editText.textSize = 14f
+        editText.setMargins(left = 20.toDpUnit().toInt(), right = 20.toDpUnit().toInt())
+        return editText
     }
 }

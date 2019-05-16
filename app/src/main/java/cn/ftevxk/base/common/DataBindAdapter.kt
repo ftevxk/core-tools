@@ -1,4 +1,4 @@
-@file:Suppress("UNCHECKED_CAST")
+@file:Suppress("UNCHECKED_CAST", "MemberVisibilityCanBePrivate")
 
 package cn.ftevxk.base.common
 
@@ -17,13 +17,59 @@ import androidx.recyclerview.widget.RecyclerView
  */
 class DataBindAdapter : RecyclerView.Adapter<DataBindAdapter.ViewHolder>() {
 
-    private val models by lazy {
-        mutableListOf<IDataBindItemModel>()
+    var adapterListener: AdapterListener? = null
+
+    private var models: MutableList<IDataBindItemModel>? = null
+
+    fun <T : IDataBindItemModel> getItemModels(): MutableList<T> {
+        if (models == null) {
+            models = mutableListOf()
+        }
+        return models as MutableList<T>
     }
 
-    private var dataBindAdapterListener: SimpleBindAdapterListener? = null
+    /**
+     * 设置单个ItemModel
+     * @param additional 是否为追加数据
+     */
+    fun <T : IDataBindItemModel> setItemModel(model: T, position: Int = -1, additional: Boolean = false) {
+        if (additional) {
+            if (position in 0 until getItemModels<T>().size) {
+                getItemModels<T>().add(position, model)
+                notifyItemInserted(position)
+            } else {
+                getItemModels<T>().add(model)
+                notifyItemInserted(itemCount)
+            }
+        } else {
+            if (position in 0 until itemCount) {
+                getItemModels<T>()[position] = model
+                notifyItemChanged(position)
+            }
+        }
+    }
 
-    fun <T : IDataBindItemModel> getItemModels() = models as MutableList<T>
+    /**
+     * 移除ItemModel
+     */
+    fun <T : IDataBindItemModel> removeItemModel(model: T): Int {
+        val index = getItemModels<T>().run {
+            val i = indexOf(model)
+            removeAt(i)
+            return@run i
+        }
+        notifyItemRemoved(index)
+        return index
+    }
+
+    /**
+     * 根据位置移除ItemModel
+     */
+    fun <T : IDataBindItemModel> removeItemModel(index: Int): T? {
+        val model = getItemModels<T>().removeAt(index)
+        notifyItemRemoved(index)
+        return model
+    }
 
     /**
      * 设置ItemModel列表，内部判断数据差异进行通知刷新界面
@@ -36,14 +82,14 @@ class DataBindAdapter : RecyclerView.Adapter<DataBindAdapter.ViewHolder>() {
 
             //item类型是否相同
             override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-                val oldModel = models[oldItemPosition]
+                val oldModel = getItemModels<T>()[oldItemPosition]
                 val newModel = newModels[newItemPosition]
                 return oldModel.diffId == newModel.diffId
             }
 
             //item内容是否相同
             override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-                val oldModel = models[oldItemPosition]
+                val oldModel = getItemModels<T>()[oldItemPosition]
                 val newModel = newModels[newItemPosition]
                 return if (oldModel.sameContent() != null || newModel.sameContent() != null) {
                     oldModel.sameContent() == newModel.sameContent()
@@ -57,96 +103,100 @@ class DataBindAdapter : RecyclerView.Adapter<DataBindAdapter.ViewHolder>() {
                 return ""
             }
         })
-
         //通知item更新
         diffResult.dispatchUpdatesTo(this)
         //将新数据覆盖旧数据
-        models.clear()
-        models.addAll(newModels)
-    }
-
-    /**
-     * 设置单个ItemModel
-     * @param additional 是否为追加数据
-     */
-    fun <T : IDataBindItemModel> setItemModel(model: T, position: Int = -1, additional: Boolean = false) {
-        val tempModels = mutableListOf<T>()
-        tempModels.addAll(models as MutableList<T>)
-        if (!additional && position in 0 until models.size) {
-            tempModels[position] = model
-        } else {
-            tempModels.add(model)
-        }
-        setItemModels(tempModels)
-    }
-
-    fun setDataBindAdapterListener(listener: SimpleBindAdapterListener) {
-        this.dataBindAdapterListener = listener
+        models = newModels as MutableList<IDataBindItemModel>
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = DataBindingUtil.inflate<ViewDataBinding>(
-                LayoutInflater.from(parent.context), viewType, parent, false
+            LayoutInflater.from(parent.context), viewType, parent, false
         )
-        dataBindAdapterListener?.onCreateViewHolder(binding)
+        adapterListener?.onCreateViewHolder(binding)
         return ViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        dataBindAdapterListener?.onBindViewHolderBefore(holder, position)
-        val model = models[position]
+        adapterListener?.onBindViewHolderBefore(holder, position)
+        val model = getItemModels<IDataBindItemModel>()[position]
         if (model.variableId > 0) {
             holder.binding.setVariable(model.variableId, model)
         }
         model.getVariablePairs()?.forEach {
             holder.binding.setVariable(it.first, it.second)
         }
-        dataBindAdapterListener?.onBindViewHolderAfter(holder, position, model)
+        adapterListener?.onBindViewHolderAfter(holder, position, model)
         //数据改变时立刻刷新UI
         holder.binding.executePendingBindings()
     }
 
+    override fun getItemCount(): Int {
+        return getItemModels<IDataBindItemModel>().size
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return getItemModels<IDataBindItemModel>()[position].layoutRes
+    }
+
     override fun onBindViewHolder(holder: ViewHolder, position: Int, payloads: MutableList<Any>) {
-        if (dataBindAdapterListener?.onBindViewHolder(holder, position, payloads) != true){
+        if (adapterListener?.onBindViewHolder(holder, position, payloads) != true) {
             super.onBindViewHolder(holder, position, payloads)
         }
     }
 
     override fun onViewAttachedToWindow(holder: ViewHolder) {
         super.onViewAttachedToWindow(holder)
-        dataBindAdapterListener?.onViewAttachedToWindow(holder)
+        adapterListener?.onViewAttachedToWindow(holder)
     }
 
     override fun onViewDetachedFromWindow(holder: ViewHolder) {
         super.onViewDetachedFromWindow(holder)
-        dataBindAdapterListener?.onViewDetachedFromWindow(holder)
+        adapterListener?.onViewDetachedFromWindow(holder)
     }
 
     override fun onViewRecycled(holder: ViewHolder) {
         super.onViewRecycled(holder)
-        dataBindAdapterListener?.onViewRecycled(holder)
+        adapterListener?.onViewRecycled(holder)
     }
 
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         super.onAttachedToRecyclerView(recyclerView)
-        dataBindAdapterListener?.onAttachedToRecyclerView(recyclerView)
+        adapterListener?.onAttachedToRecyclerView(recyclerView)
     }
 
     override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
         super.onDetachedFromRecyclerView(recyclerView)
-        dataBindAdapterListener?.onDetachedFromRecyclerView(recyclerView)
+        adapterListener?.onDetachedFromRecyclerView(recyclerView)
     }
 
     override fun onFailedToRecycleView(holder: ViewHolder): Boolean {
-        val result = dataBindAdapterListener?.onFailedToRecycleView(holder)
+        val result = adapterListener?.onFailedToRecycleView(holder)
         return result ?: super.onFailedToRecycleView(holder)
     }
 
-    override fun getItemCount() = models.size
-
-    override fun getItemViewType(position: Int): Int {
-        return models[position].layoutRes
-    }
+    /****************************
+     * ViewHolder、监听接口
+     ****************************/
 
     class ViewHolder(val binding: ViewDataBinding) : RecyclerView.ViewHolder(binding.root)
+
+    interface AdapterListener {
+        //onBindViewHolder数据绑定之前执行
+        fun onBindViewHolderBefore(holder: ViewHolder, position: Int) {}
+
+        //onBindViewHolder数据绑定之后执行
+        fun onBindViewHolderAfter(holder: ViewHolder, position: Int, model: IDataBindItemModel) {}
+
+        //需要处理局部刷新调用，返回true会中止后续onBindViewHolder(holder: ViewHolder, position: Int)的执行
+        fun onBindViewHolder(holder: ViewHolder, position: Int, payloads: MutableList<Any>): Boolean? = null
+
+        fun onCreateViewHolder(viewDataBinding: ViewDataBinding) {}
+        fun onViewAttachedToWindow(holder: ViewHolder) {}
+        fun onViewDetachedFromWindow(holder: ViewHolder) {}
+        fun onViewRecycled(holder: ViewHolder) {}
+        fun onFailedToRecycleView(holder: ViewHolder): Boolean? = null
+        fun onAttachedToRecyclerView(recyclerView: RecyclerView) {}
+        fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {}
+    }
 }
