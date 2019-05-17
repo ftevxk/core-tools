@@ -3,6 +3,7 @@
 package cn.ftevxk.base.extension
 
 import android.content.Context
+import android.content.ContextWrapper
 import android.view.GestureDetector
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +12,8 @@ import android.widget.EditText
 import android.widget.TextView
 import androidx.core.view.GestureDetectorCompat
 import androidx.databinding.BindingAdapter
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 
 /**
  * 在XML布局里直接自定义drawable的宽高
@@ -63,10 +66,60 @@ fun View.setMargins(left: Int? = null, top: Int? = null, right: Int? = null, bot
             layoutParams = ViewGroup.MarginLayoutParams(params.width, params.height)
         }
         (params as ViewGroup.MarginLayoutParams).setMargins(
-            left ?: params.leftMargin,
-            top ?: params.topMargin,
-            right ?: params.rightMargin,
-            bottom ?: params.bottomMargin)
+                left ?: params.leftMargin,
+                top ?: params.topMargin,
+                right ?: params.rightMargin,
+                bottom ?: params.bottomMargin)
         this.requestLayout()
+    }
+}
+
+/**
+ * 通过View找到所属FragmentActivity
+ */
+fun View.findActivity(): FragmentActivity? = context.findActivity()
+
+/**
+ * 通过Context找到所属FragmentActivity
+ */
+fun Context.findActivity(): FragmentActivity? {
+    var current = this
+    while (current is ContextWrapper){
+        if (current is FragmentActivity){
+            return current
+        }
+        current = current.baseContext
+    }
+    return null
+}
+
+/**
+ * 通过控件找到所属Fragment(AndroidX)
+ */
+fun View.findFragment(): Fragment? {
+    val activity = findActivity() ?: return null
+    val activityRoot = activity.findViewById<View>(android.R.id.content)
+    val viewWithFragmentMaps = mutableMapOf<View, Fragment>()
+    putViewWithFragmentMaps(activity.supportFragmentManager.fragments, viewWithFragmentMaps)
+    var currentView: View = this
+    while (currentView != activityRoot) {
+        if (viewWithFragmentMaps.containsKey(currentView)){
+            return viewWithFragmentMaps[currentView]
+        }else{
+            val parent = currentView.parent
+            if (parent is View){
+                currentView = parent
+            }
+        }
+    }
+    return null
+}
+
+private fun putViewWithFragmentMaps(fragments: List<Fragment>?, maps: MutableMap<View, Fragment>){
+    fragments?.forEach {
+        if (it.view != null) {
+            maps[it.view!!] = it
+            putViewWithFragmentMaps(it.childFragmentManager.fragments, maps)
+        }
     }
 }
