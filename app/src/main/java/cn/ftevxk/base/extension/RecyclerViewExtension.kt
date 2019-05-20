@@ -75,6 +75,10 @@ fun <T : IDataBindItemModel> RecyclerView.getItemModels(): MutableList<T>? {
     return getDataBindAdapter()?.getItemModels()
 }
 
+fun <T : IDataBindItemModel> RecyclerView.getItemModel(position: Int): T? {
+    return getDataBindAdapter()?.getItemModel(position)
+}
+
 fun <T : IDataBindItemModel> RecyclerView.setItemModel(model: T, position: Int = -1, additional: Boolean = false) {
     getDataBindAdapter()?.setItemModel(model, position, additional)
 }

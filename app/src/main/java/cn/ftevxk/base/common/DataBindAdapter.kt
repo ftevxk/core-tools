@@ -17,15 +17,28 @@ import androidx.recyclerview.widget.RecyclerView
  */
 class DataBindAdapter : RecyclerView.Adapter<DataBindAdapter.ViewHolder>() {
 
-    var adapterListener: AdapterListener? = null
-
     private var models: MutableList<IDataBindItemModel>? = null
 
+    /**
+     * 重写Adapter各方法监听
+     */
+    var adapterListener: AdapterListener? = null
+
+    /**
+     * 获得ItemModels
+     */
     fun <T : IDataBindItemModel> getItemModels(): MutableList<T> {
         if (models == null) {
             models = mutableListOf()
         }
         return models as MutableList<T>
+    }
+
+    /**
+     * 根据位置获得ItemModel
+     */
+    fun <T : IDataBindItemModel> getItemModel(position: Int): T? {
+        return getItemModels<T>()[position]
     }
 
     /**
