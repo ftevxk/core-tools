@@ -5,7 +5,7 @@ package cn.ftevxk.base.extension
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
-import android.widget.TextView
+import android.view.View
 import androidx.databinding.BindingAdapter
 
 /**
@@ -16,7 +16,7 @@ enum class ShapeType(value: String) {
 }
 
 /**
- * Shape背景扩展设置，继承自TextView的控件
+ * Shape背景扩展设置
  * bind:shape_type="@{`rect`}" Shape类型设置 ==> 矩形: rect; 椭圆形: oval; 线形: line; 环形: ring
  * bind:unit="@{`dp`}" 单位类型设置 ==> px; dp; sp; pt; in; mm; 默认dp
  * 其余参照Shape用法
@@ -25,7 +25,7 @@ enum class ShapeType(value: String) {
     "bind:shape_stroke_width", "bind:shape_stroke_color", "bind:shape_dash_width", "bind:shape_dash_gap",
     "bind:shape_radius", "bind:shape_top_left_radius", "bind:shape_top_right_radius",
     "bind:shape_bottom_left_radius", "bind:shape_bottom_right_radius"], requireAll = false)
-fun TextView.setShapeBackground(typeStr: String?, unit: String? = null,
+fun View.setShapeBackground(typeStr: String?, unit: String? = null,
                             solidColor: Int? = null, strokeWidth: Number? = null, strokeColor: Int? = null,
                             dashWidth: Number? = null, dashGap: Number? = null,
                             radius: Number? = null, topLeftRadius: Number? = null, topRightRadius: Number? = null,
