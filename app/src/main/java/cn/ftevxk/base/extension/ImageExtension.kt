@@ -17,7 +17,7 @@ import com.bumptech.glide.request.RequestOptions
  */
 @BindingAdapter(value = ["bind:res", "bind:placeholder", "bind:error",
     "bind:transform", "bind:circle", "bind:thumbnail"], requireAll = false)
-fun ImageView.load(res: Any, placeholder: Any? = null, error: Any? = null,
+fun ImageView.load(res: Any?, placeholder: Any? = null, error: Any? = null,
                    transform: Transformation<Bitmap>? = null,
                    circle: Boolean = false, thumbnail: Float = 0f) {
     var options = RequestOptions()

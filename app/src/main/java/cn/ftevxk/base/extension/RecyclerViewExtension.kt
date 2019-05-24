@@ -83,8 +83,8 @@ fun <T : IDataBindItemModel> RecyclerView.setItemModel(model: T, position: Int =
     getDataBindAdapter()?.setItemModel(model, position, additional)
 }
 
-fun RecyclerView.setAdapterListener(listener: DataBindAdapter.AdapterListener) {
-    getDataBindAdapter()?.adapterListener = listener
+fun RecyclerView.setBindAdapterListener(listener: DataBindAdapter.BindAdapterListener) {
+    getDataBindAdapter()?.bindAdapterListener = listener
 }
 
 fun <T : IDataBindItemModel> RecyclerView.removeItemModel(model: T): Int?{

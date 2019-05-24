@@ -4,6 +4,9 @@ package cn.ftevxk.base.extension
 
 import android.content.Context
 import android.content.ContextWrapper
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Color
 import android.view.GestureDetector
 import android.view.View
 import android.view.ViewGroup
@@ -72,6 +75,20 @@ fun View.setMargins(left: Int? = null, top: Int? = null, right: Int? = null, bot
             bottom ?: params.bottomMargin
         )
         this.requestLayout()
+    }
+}
+
+/**
+ * 将View转换成Bitmap
+ * @param transparent 是否为透明背景
+ */
+fun View.translateBitmap(result: (Bitmap) -> Unit, transparent: Boolean = true) {
+    post {
+        val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+        if (!transparent) canvas.drawColor(Color.WHITE)
+        this.draw(canvas)
+        result.invoke(bitmap)
     }
 }
 
