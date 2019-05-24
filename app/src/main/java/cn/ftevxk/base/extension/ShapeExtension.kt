@@ -2,11 +2,11 @@
 
 package cn.ftevxk.base.extension
 
-import android.content.Context
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
 import android.view.View
 import androidx.databinding.BindingAdapter
+import cn.ftevxk.base.extension.ShapeExtension.getShapeDrawable
 
 /**
  * Shape类型枚举
@@ -42,56 +42,56 @@ fun View.setShapeBackground(typeStr: String?, unit: String? = null,
                 "\t\t\t\t环形 => \n\t\t\t\tbind:shape_type=\"@{`ring`}\"\n"
         )
     }
-    val drawable = context.getShapeDrawable(shapeType, solidColor,
+    val drawable = getShapeDrawable(shapeType, solidColor,
             strokeWidth.getUnitValue(unit), strokeColor, dashWidth.getUnitValue(unit), dashGap.getUnitValue(unit),
             radius.getUnitValue(unit), topLeftRadius.getUnitValue(unit),
             topRightRadius.getUnitValue(unit), bottomLeftRadius.getUnitValue(unit), bottomRightRadius.getUnitValue(unit)
     )
     //设置背景
     this.background = drawable
-//    //如果有虚线则关闭硬件加速，使用出现黑色背景
-//    if (dashWidth != null && dashGap != null) {
-//        this.setLayerType(View.LAYER_TYPE_SOFTWARE, null)
-//    }
 }
 
-/**
- * 获得自定义Shape的Drawable
- */
-fun Context.getShapeDrawable(type: ShapeType, solidColor: Int? = null,
-                          strokeWidth: Number? = null, strokeColor: Int? = null,
-                          dashWidth: Number? = null, dashGap: Number? = null,
-                          radius: Number? = null, topLeftRadius: Number? = null, topRightRadius: Number? = null,
-                          bottomLeftRadius: Number? = null, bottomRightRadius: Number? = null): Drawable {
-    val drawable = GradientDrawable()
-    drawable.shape = when (type) {
-        ShapeType.RECT -> GradientDrawable.RECTANGLE
-        ShapeType.OVAL -> GradientDrawable.OVAL
-        ShapeType.LINE -> GradientDrawable.LINE
-        ShapeType.RING -> GradientDrawable.RING
-    }
-    //设置填充色
-    solidColor?.run { drawable.setColor(this) }
-    //设置边框
-    if (strokeWidth != null && strokeColor != null) {
-        if (dashWidth != null && dashGap != null && dashWidth.toFloat() > 0f) {
-            //边框是虚线的时候
-            drawable.setStroke(strokeWidth.toInt(), strokeColor, dashWidth.toFloat(), dashGap.toFloat())
-        } else {
-            drawable.setStroke(strokeWidth.toInt(), strokeColor)
+object ShapeExtension {
+
+    /**
+     * 获得自定义Shape的Drawable
+     */
+    @JvmStatic
+    fun getShapeDrawable(type: ShapeType, solidColor: Int? = null,
+                                 strokeWidth: Number? = null, strokeColor: Int? = null,
+                                 dashWidth: Number? = null, dashGap: Number? = null,
+                                 radius: Number? = null, topLeftRadius: Number? = null, topRightRadius: Number? = null,
+                                 bottomLeftRadius: Number? = null, bottomRightRadius: Number? = null): Drawable {
+        val drawable = GradientDrawable()
+        drawable.shape = when (type) {
+            ShapeType.RECT -> GradientDrawable.RECTANGLE
+            ShapeType.OVAL -> GradientDrawable.OVAL
+            ShapeType.LINE -> GradientDrawable.LINE
+            ShapeType.RING -> GradientDrawable.RING
         }
-    }
-    //设置角度
-    if (radius != null) {
-        drawable.cornerRadius = radius.toFloat()
-    } else {
-        drawable.cornerRadii =
+        //设置填充色
+        solidColor?.run { drawable.setColor(this) }
+        //设置边框
+        if (strokeWidth != null && strokeColor != null) {
+            if (dashWidth != null && dashGap != null && dashWidth.toFloat() > 0f) {
+                //边框是虚线的时候
+                drawable.setStroke(strokeWidth.toInt(), strokeColor, dashWidth.toFloat(), dashGap.toFloat())
+            } else {
+                drawable.setStroke(strokeWidth.toInt(), strokeColor)
+            }
+        }
+        //设置角度
+        if (radius != null) {
+            drawable.cornerRadius = radius.toFloat()
+        } else {
+            drawable.cornerRadii =
                 floatArrayOf(
-                        topLeftRadius?.toFloat() ?: 0f, topLeftRadius?.toFloat() ?: 0f,
-                        topRightRadius?.toFloat() ?: 0f, topRightRadius?.toFloat() ?: 0f,
-                        bottomRightRadius?.toFloat() ?: 0f, bottomRightRadius?.toFloat() ?: 0f,
-                        bottomLeftRadius?.toFloat() ?: 0f, bottomLeftRadius?.toFloat() ?: 0f
+                    topLeftRadius?.toFloat() ?: 0f, topLeftRadius?.toFloat() ?: 0f,
+                    topRightRadius?.toFloat() ?: 0f, topRightRadius?.toFloat() ?: 0f,
+                    bottomRightRadius?.toFloat() ?: 0f, bottomRightRadius?.toFloat() ?: 0f,
+                    bottomLeftRadius?.toFloat() ?: 0f, bottomLeftRadius?.toFloat() ?: 0f
                 )
+        }
+        return drawable
     }
-    return drawable
 }
