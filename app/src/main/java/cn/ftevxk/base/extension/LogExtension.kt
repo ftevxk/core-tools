@@ -15,6 +15,7 @@ object LogExtension {
     /**
      * 获得Log调用行可高亮信息
      */
+    @JvmStatic
     fun getLineTag(): String {
         var isCurrent = false
         val stackTraceElements = Thread.currentThread().stackTrace
@@ -23,11 +24,11 @@ object LogExtension {
             return "${stackTrace.methodName}(${stackTrace.fileName}:${stackTrace.lineNumber})"
         } else {
             stackTraceElements.forEachIndexed { index, stackTrace ->
-                if (isCurrent && stackTrace.fileName != "${javaClass.simpleName}.kt") {
+                if (isCurrent && !stackTrace.fileName.startsWith(javaClass.simpleName)) {
                     stackTraceIndex = index
                     return "${stackTrace.methodName}(${stackTrace.fileName}:${stackTrace.lineNumber})"
                 } else {
-                    if (stackTrace.fileName == "${javaClass.simpleName}.kt") isCurrent = true
+                    if (stackTrace.fileName.startsWith(javaClass.simpleName)) isCurrent = true
                 }
             }
         }

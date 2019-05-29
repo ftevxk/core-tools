@@ -10,6 +10,7 @@ import android.graphics.Color
 import android.view.GestureDetector
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewTreeObserver
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.TextView
@@ -148,5 +149,31 @@ private fun putViewWithFragmentMaps(fragments: List<Fragment>?, maps: MutableMap
             maps[it.view!!] = it
             putViewWithFragmentMaps(it.childFragmentManager.fragments, maps)
         }
+    }
+}
+
+/**
+ * 添加addOnGlobalLayoutListener监听
+ */
+inline fun <T : View> T.afterMeasured(crossinline f: T.() -> Unit) {
+    viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
+        override fun onGlobalLayout() {
+            if (measuredWidth > 0 && measuredHeight > 0) {
+                viewTreeObserver.removeOnGlobalLayoutListener(this)
+                f()
+            }
+        }
+    })
+}
+
+/**
+ * 重置View的大小
+ */
+fun View.resize(width: Int? = null, height: Int? = null) {
+    val lp = layoutParams
+    lp?.let {
+        lp.width = width ?: lp.width
+        lp.height = height ?: lp.height
+        layoutParams = lp
     }
 }

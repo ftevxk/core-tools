@@ -68,7 +68,7 @@ class MainActivity : AppCompatActivity() {
             alert("是否删除该条?") {
                 negativeButton("取消") {}
                 positiveButton("确定") {
-                    binding.recycler.removeItemModel<MainItemModel>(position)
+                    binding.recycler.removeItemModel(position)
                 }
             }.show()
         })

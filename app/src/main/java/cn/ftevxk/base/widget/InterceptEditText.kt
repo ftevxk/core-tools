@@ -15,13 +15,13 @@ import android.widget.EditText
  * 可拦截字符输入、字符删除、按键输入、光标选择
  */
 class InterceptEditText : EditText {
-    constructor(context: Context?) : super(context, null)
+    constructor(context: Context?) : this(context, null)
 
     constructor(context: Context?, attrs: AttributeSet?) :
-            super(context, attrs, android.R.attr.editTextStyle)
+            this(context, attrs, android.R.attr.editTextStyle)
 
     constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) :
-            super(context, attrs, defStyleAttr, 0)
+            this(context, attrs, defStyleAttr, 0)
 
     constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) :
             super(context, attrs, defStyleAttr, defStyleRes)

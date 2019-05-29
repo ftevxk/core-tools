@@ -72,8 +72,8 @@ class DataBindAdapter : RecyclerView.Adapter<DataBindAdapter.ViewHolder>() {
     /**
      * 移除ItemModel
      */
-    fun <T : IDataBindItemModel> removeItemModel(model: T): Int {
-        getItemModels<T>().run {
+    fun removeItemModel(model: IDataBindItemModel): Int {
+        getItemModels<IDataBindItemModel>().run {
             //旧数据临时变量
             val tempModels = if (bindAdapterListener != null) {
                 mutableListOf(models) as MutableList<IDataBindItemModel>
@@ -91,13 +91,13 @@ class DataBindAdapter : RecyclerView.Adapter<DataBindAdapter.ViewHolder>() {
     /**
      * 根据位置移除ItemModel
      */
-    fun <T : IDataBindItemModel> removeItemModel(index: Int): T? {
+    fun removeItemModel(index: Int): IDataBindItemModel? {
         //旧数据临时变量
         val tempModels = if (bindAdapterListener == null) {
             mutableListOf(models) as MutableList<IDataBindItemModel>
         } else getItemModels()
         //移除操作
-        val model = getItemModels<T>().removeAt(index)
+        val model = getItemModels<IDataBindItemModel>().removeAt(index)
         notifyItemRemoved(index)
         //移除itemModel通知回调
         bindAdapterListener?.onNotifyChange(tempModels, getItemModels())
