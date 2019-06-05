@@ -34,6 +34,12 @@ fun Number.toMmUnit(): Float {
     return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_MM, this.toFloat(), Resources.getSystem().displayMetrics)
 }
 
+fun Number.toPxUnitInt() = this.toPxUnit().toInt()
+fun Number.toDpUnitInt() = this.toDpUnit().toInt()
+fun Number.toSpUnitInt() = this.toSpUnit().toInt()
+fun Number.toPtUnitInt() = this.toPtUnit().toInt()
+fun Number.toInUnitInt() = this.toInUnit().toInt()
+fun Number.toMmUnitInt() = this.toMmUnit().toInt()
 
 /**
  * 单位类型转换，当前主要供@BindingAdapter使用，默认单位DP
