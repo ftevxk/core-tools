@@ -149,7 +149,7 @@ class DataBindAdapter : RecyclerView.Adapter<DataBindAdapter.ViewHolder>() {
             LayoutInflater.from(parent.context), viewType, parent, false
         )
         bindAdapterListener?.onCreateViewHolder(binding)
-        return ViewHolder(binding)
+        return ViewHolder(this, binding)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -214,7 +214,7 @@ class DataBindAdapter : RecyclerView.Adapter<DataBindAdapter.ViewHolder>() {
      * ViewHolder、监听接口
      ****************************/
 
-    class ViewHolder(val binding: ViewDataBinding) : RecyclerView.ViewHolder(binding.root)
+    class ViewHolder(val adapter: DataBindAdapter, val binding: ViewDataBinding) : RecyclerView.ViewHolder(binding.root)
 
     interface BindAdapterListener {
         //onBindViewHolder数据绑定之前执行
@@ -227,7 +227,7 @@ class DataBindAdapter : RecyclerView.Adapter<DataBindAdapter.ViewHolder>() {
         fun onBindViewHolder(holder: ViewHolder, position: Int, payloads: MutableList<Any>): Boolean? = null
 
         //通知改变回调监听，原RecyclerView.AdapterDataObserver部分监听失效
-        fun onNotifyChange(oldModels: MutableList<IDataBindItemModel>, newModels: MutableList<IDataBindItemModel>){}
+        fun onNotifyChange(oldModels: MutableList<IDataBindItemModel>, newModels: MutableList<IDataBindItemModel>) {}
 
         fun onCreateViewHolder(viewDataBinding: ViewDataBinding) {}
         fun onViewAttachedToWindow(holder: ViewHolder) {}

@@ -50,8 +50,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initListener() {
-        //设置点击、长按事件
-        binding.recycler.setOnItemClickListener(onItemClickListener = { holder, position, location ->
+        //设置点击事件
+        binding.recycler.setOnItemClickListener { holder, position, location ->
             //获取item中间文本控件
             val textView = holder.getItemBinding<ItemMainBinding>()?.textView
             //点击控件toast，其余地方替换一个随机数字
@@ -60,20 +60,20 @@ class MainActivity : AppCompatActivity() {
             } else {
                 //拷贝一个仅替换title
                 val model = models[position]
-                    .copy(title = Random.nextInt(100).toString())
+                        .copy(title = Random.nextInt(100).toString())
                 binding.recycler.setItemModel(model, position)
             }
-        }, onItemLongClickListener = { _, position, _ ->
-            //长按弹框询问是否删除
+        }
+        //长按弹框询问是否删除
+        binding.recycler.setOnItemLongClickListener { _, position, _ ->
             alert("是否删除该条?") {
                 negativeButton("取消") {}
                 positiveButton("确定") {
                     binding.recycler.removeItemModel(position)
                 }
             }.show()
-        })
+        }
     }
-
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         super.onCreateOptionsMenu(menu)
@@ -83,8 +83,8 @@ class MainActivity : AppCompatActivity() {
         return true
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item?.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
             menuId -> {
                 alert("是否添加新数据?") {
                     val editText = getAddEditText()

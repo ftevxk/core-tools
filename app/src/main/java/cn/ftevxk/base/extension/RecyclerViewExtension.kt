@@ -95,19 +95,41 @@ fun RecyclerView.removeItemModel(index: Int): IDataBindItemModel? {
     return getDataBindAdapter()?.removeItemModel(index)
 }
 
+fun <T : IDataBindItemModel> RecyclerView.ViewHolder.getItemModels(): MutableList<T>? {
+    return (this as? DataBindAdapter.ViewHolder)?.adapter?.getItemModels()
+}
+
+fun <T : IDataBindItemModel> RecyclerView.ViewHolder.getItemModel(position: Int): T? {
+    return (this as? DataBindAdapter.ViewHolder)?.adapter?.getItemModel(position)
+}
+
 /****************************************
  * (START) 点击事件相关
  ***************************************/
 
 /**
- * 扩展RecyclerView的点击与长按事件
+ * 扩展RecyclerView的点击事件
  */
-fun RecyclerView.setOnItemClickListener(
-    onItemClickListener: ((holder: RecyclerView.ViewHolder, position: Int, location: Array<Float>) -> Unit)? = null,
-    onItemLongClickListener: ((holder: RecyclerView.ViewHolder, position: Int, location: Array<Float>) -> Unit)? = null
-) {
-    val itemGesture = ItemGesture(this)
+fun RecyclerView.setOnItemClickListener(onItemClickListener: ((
+        holder: RecyclerView.ViewHolder, position: Int, location: Array<Float>) -> Unit)? = null) {
+    var itemGesture = getTag(hashCode()) as? ItemGesture
+    if (itemGesture == null) {
+        itemGesture = ItemGesture(this)
+        setTag(hashCode(), itemGesture)
+    }
     itemGesture.onItemClickListener = onItemClickListener
+}
+
+/**
+ * 扩展RecyclerView的长按事件
+ */
+fun RecyclerView.setOnItemLongClickListener(
+        onItemLongClickListener: ((holder: RecyclerView.ViewHolder, position: Int, location: Array<Float>) -> Unit)? = null) {
+    var itemGesture = getTag(hashCode()) as? ItemGesture
+    if (itemGesture == null) {
+        itemGesture = ItemGesture(this)
+        setTag(hashCode(), itemGesture)
+    }
     itemGesture.onItemLongClickListener = onItemLongClickListener
 }
 
@@ -121,8 +143,7 @@ fun RecyclerView.isClickControlView(view: View?, location: Array<Float>): Boolea
     val viewRect = Rect()
     view.getGlobalVisibleRect(viewRect)
     if (location[0] >= viewRect.left - recyclerRect.left && location[0] <= viewRect.right - recyclerRect.left
-        && location[1] >= viewRect.top - recyclerRect.top && location[1] <= viewRect.bottom - recyclerRect.top
-    ) {
+            && location[1] >= viewRect.top - recyclerRect.top && location[1] <= viewRect.bottom - recyclerRect.top) {
         return true
     }
     return false
@@ -136,16 +157,15 @@ fun RecyclerView.isClickControlView(view: View?, location: Array<Float>): Boolea
  * 手势事件封装类
  */
 open class ItemGesture(private val recyclerView: RecyclerView) :
-    GestureDetector.SimpleOnGestureListener(), RecyclerView.OnItemTouchListener {
+        GestureDetector.SimpleOnGestureListener(), RecyclerView.OnItemTouchListener {
+
     init {
         recyclerView.addOnItemTouchListener(this)
     }
 
-    var onItemClickListener:
-            ((holder: RecyclerView.ViewHolder, position: Int, location: Array<Float>) -> Unit)? = null
+    var onItemClickListener: ((holder: RecyclerView.ViewHolder, position: Int, location: Array<Float>) -> Unit)? = null
 
-    var onItemLongClickListener:
-            ((holder: RecyclerView.ViewHolder, position: Int, location: Array<Float>) -> Unit)? = null
+    var onItemLongClickListener: ((holder: RecyclerView.ViewHolder, position: Int, location: Array<Float>) -> Unit)? = null
 
     private var detector = GestureDetectorCompat(recyclerView.context, this)
 
@@ -166,7 +186,7 @@ open class ItemGesture(private val recyclerView: RecyclerView) :
         if (view != null) {
             val position = recyclerView.getChildLayoutPosition(view)
             val holder =
-                recyclerView.findViewHolderForLayoutPosition(position) as RecyclerView.ViewHolder
+                    recyclerView.findViewHolderForLayoutPosition(position) as RecyclerView.ViewHolder
             onItemClickListener?.invoke(holder, position, arrayOf(e.x, e.y))
             return true
         }
@@ -181,7 +201,7 @@ open class ItemGesture(private val recyclerView: RecyclerView) :
         if (view != null) {
             val position = recyclerView.getChildLayoutPosition(view)
             val holder =
-                recyclerView.findViewHolderForLayoutPosition(position) as RecyclerView.ViewHolder
+                    recyclerView.findViewHolderForLayoutPosition(position) as RecyclerView.ViewHolder
             onItemLongClickListener?.invoke(holder, position, arrayOf(e.x, e.y))
         }
     }
