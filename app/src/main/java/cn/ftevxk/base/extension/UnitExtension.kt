@@ -1,4 +1,4 @@
-@file:Suppress("unused", "DefaultLocale")
+@file:Suppress("unused", "DefaultLocale", "UNCHECKED_CAST")
 
 package cn.ftevxk.base.extension
 
@@ -7,42 +7,34 @@ import android.util.TypedValue
 
 /****************************************
  * 单位值转换相关扩展
- * 例: 100.toDpUnit()
  ***************************************/
 
-fun Number.toPxUnit(): Float {
-    return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX, this.toFloat(), Resources.getSystem().displayMetrics)
+fun <T : Number> Any.getPxUnit(value: T): T {
+    return transformUnitValue(value.getUnitValue("px"), value)
 }
 
-fun Number.toDpUnit(): Float {
-    return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, this.toFloat(), Resources.getSystem().displayMetrics)
+fun <T : Number> Any.getDpUnit(value: T): T {
+    return transformUnitValue(value.getUnitValue("dp"), value)
 }
 
-fun Number.toSpUnit(): Float {
-    return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, this.toFloat(), Resources.getSystem().displayMetrics)
+fun <T : Number> Any.getSpUnit(value: T): T {
+    return transformUnitValue(value.getUnitValue("sp"), value)
 }
 
-fun Number.toPtUnit(): Float {
-    return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PT, this.toFloat(), Resources.getSystem().displayMetrics)
+fun <T : Number> Any.getPtUnit(value: T): T {
+    return transformUnitValue(value.getUnitValue("pt"), value)
 }
 
-fun Number.toInUnit(): Float {
-    return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_IN, this.toFloat(), Resources.getSystem().displayMetrics)
+fun <T : Number> Any.getInUnit(value: T): T {
+    return transformUnitValue(value.getUnitValue("in"), value)
 }
 
-fun Number.toMmUnit(): Float {
-    return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_MM, this.toFloat(), Resources.getSystem().displayMetrics)
+fun <T : Number> Any.getMmUnit(value: T): T {
+    return transformUnitValue(value.getUnitValue("mm"), value)
 }
-
-fun Number.toPxUnitInt() = this.toPxUnit().toInt()
-fun Number.toDpUnitInt() = this.toDpUnit().toInt()
-fun Number.toSpUnitInt() = this.toSpUnit().toInt()
-fun Number.toPtUnitInt() = this.toPtUnit().toInt()
-fun Number.toInUnitInt() = this.toInUnit().toInt()
-fun Number.toMmUnitInt() = this.toMmUnit().toInt()
 
 /**
- * 单位类型转换，当前主要供@BindingAdapter使用，默认单位DP
+ * 单位类型转换，默认单位DP
  */
 fun Number?.getUnitValue(unitStr: String?): Float {
     if (this == null) return 0f
@@ -57,4 +49,17 @@ fun Number?.getUnitValue(unitStr: String?): Float {
         else -> throw Throwable("单位值仅可以设置: px、dp、sp、pt、in、mm")
     }
     return TypedValue.applyDimension(unit, this.toFloat(), Resources.getSystem().displayMetrics)
+}
+
+/**
+ * 转化单位值泛型
+ */
+private fun <T : Number> transformUnitValue(value: Float, type: T): T {
+    return when (type) {
+        is Int -> value.toInt() as T
+        is Double -> value.toDouble() as T
+        is Long -> value.toLong() as T
+        is Short -> value.toShort() as T
+        else -> value as T
+    }
 }

@@ -60,7 +60,7 @@ class MainActivity : AppCompatActivity() {
             } else {
                 //拷贝一个仅替换title
                 val model = models[position]
-                        .copy(title = Random.nextInt(100).toString())
+                    .copy(title = Random.nextInt(100).toString())
                 binding.recycler.setItemModel(model, position)
             }
         }
@@ -119,10 +119,10 @@ class MainActivity : AppCompatActivity() {
         editText.hint = "输入需要插入的位置，不输入则插入末尾"
         editText.inputType = EditorInfo.TYPE_CLASS_NUMBER
         editText.textSize = 14f
-        editText.setMargins(left = 20.toDpUnit().toInt(), right = 20.toDpUnit().toInt())
-        editText.setInterceptListener(object : InterceptEditText.InterceptListener{
+        editText.setMargins(left = getDpUnit(20), right = getDpUnit(20))
+        editText.setInterceptListener(object : InterceptEditText.InterceptListener {
             override fun commitText(target: InputConnection, text: CharSequence, newCursorPosition: Int): Boolean? {
-                if ((editText.text.toString() + text).toInt() > models.size){
+                if ((editText.text.toString() + text).toInt() > models.size) {
                     toast("ItemModel插入的位置不能大于${models.size}")
                     return false
                 }
