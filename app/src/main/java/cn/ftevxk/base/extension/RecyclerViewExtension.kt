@@ -103,19 +103,20 @@ fun <T : IDataBindItemModel> RecyclerView.ViewHolder.getItemModel(position: Int)
     return (this as? DataBindAdapter.ViewHolder)?.adapter?.getItemModel(position)
 }
 
-/****************************************
- * (START) 点击事件相关
- ***************************************/
+/*****************************************************************
+ * 点击事件相关
+ * 可用于任意RecyclerView.Adapter，与DataBindAdapter无关
+ *****************************************************************/
 
 /**
  * 扩展RecyclerView的点击事件
  */
 fun RecyclerView.setOnItemClickListener(onItemClickListener: ((
-        holder: RecyclerView.ViewHolder, position: Int, location: Array<Float>) -> Unit)? = null) {
-    var itemGesture = getTag(hashCode()) as? ItemGesture
+        holder: RecyclerView.ViewHolder, position: Int) -> Unit)? = null) {
+    var itemGesture = getTag("ItemGesture".hashCode()) as? ItemGesture
     if (itemGesture == null) {
         itemGesture = ItemGesture(this)
-        setTag(hashCode(), itemGesture)
+        setTag("ItemGesture".hashCode(), itemGesture)
     }
     itemGesture.onItemClickListener = onItemClickListener
 }
@@ -123,35 +124,50 @@ fun RecyclerView.setOnItemClickListener(onItemClickListener: ((
 /**
  * 扩展RecyclerView的长按事件
  */
-fun RecyclerView.setOnItemLongClickListener(
-        onItemLongClickListener: ((holder: RecyclerView.ViewHolder, position: Int, location: Array<Float>) -> Unit)? = null) {
-    var itemGesture = getTag(hashCode()) as? ItemGesture
+fun RecyclerView.setOnItemLongClickListener(onItemLongClickListener: ((
+        holder: RecyclerView.ViewHolder, position: Int) -> Unit)? = null) {
+    var itemGesture = getTag("ItemGesture".hashCode()) as? ItemGesture
     if (itemGesture == null) {
         itemGesture = ItemGesture(this)
-        setTag(hashCode(), itemGesture)
+        setTag("ItemGesture".hashCode(), itemGesture)
     }
     itemGesture.onItemLongClickListener = onItemLongClickListener
 }
 
 /**
- * item点击的是否为指定控件
+ * item点击的位置是否为指定控件
  */
-fun RecyclerView.isClickControlView(view: View?, location: Array<Float>): Boolean {
+fun RecyclerView.ViewHolder.isClickControlView(view: View?): Boolean {
     if (view == null) return false
+    val recyclerView = clickRecyclerView
+    val clickLocation = clickLocation
+    if (recyclerView == null || clickLocation == null) return false
     val recyclerRect = Rect()
-    this.getGlobalVisibleRect(recyclerRect)
+    recyclerView.getGlobalVisibleRect(recyclerRect)
     val viewRect = Rect()
     view.getGlobalVisibleRect(viewRect)
-    if (location[0] >= viewRect.left - recyclerRect.left && location[0] <= viewRect.right - recyclerRect.left
-            && location[1] >= viewRect.top - recyclerRect.top && location[1] <= viewRect.bottom - recyclerRect.top) {
+    if (clickLocation[0] >= viewRect.left - recyclerRect.left &&
+            clickLocation[0] <= viewRect.right - recyclerRect.left &&
+            clickLocation[1] >= viewRect.top - recyclerRect.top &&
+            clickLocation[1] <= viewRect.bottom - recyclerRect.top) {
         return true
     }
     return false
 }
 
-/****************************************
- * (END) 点击事件相关
- ***************************************/
+/**
+ * Item点击时存取坐标位置
+ */
+var RecyclerView.ViewHolder.clickLocation: Array<Float>?
+    get() = itemView.getTag("clickLocation".hashCode()) as? Array<Float>
+    set(value) = itemView.setTag("clickLocation".hashCode(), value)
+
+/**
+ * Item点击时临时存取RecyclerView对象
+ */
+private var RecyclerView.ViewHolder.clickRecyclerView: RecyclerView?
+    get() = itemView.getTag("clickRecyclerView".hashCode()) as? RecyclerView
+    set(value) = itemView.setTag("clickRecyclerView".hashCode(), value)
 
 /**
  * 手势事件封装类
@@ -163,9 +179,9 @@ open class ItemGesture(private val recyclerView: RecyclerView) :
         recyclerView.addOnItemTouchListener(this)
     }
 
-    var onItemClickListener: ((holder: RecyclerView.ViewHolder, position: Int, location: Array<Float>) -> Unit)? = null
+    var onItemClickListener: ((holder: RecyclerView.ViewHolder, position: Int) -> Unit)? = null
 
-    var onItemLongClickListener: ((holder: RecyclerView.ViewHolder, position: Int, location: Array<Float>) -> Unit)? = null
+    var onItemLongClickListener: ((holder: RecyclerView.ViewHolder, position: Int) -> Unit)? = null
 
     private var detector = GestureDetectorCompat(recyclerView.context, this)
 
@@ -187,7 +203,9 @@ open class ItemGesture(private val recyclerView: RecyclerView) :
             val position = recyclerView.getChildLayoutPosition(view)
             val holder =
                     recyclerView.findViewHolderForLayoutPosition(position) as RecyclerView.ViewHolder
-            onItemClickListener?.invoke(holder, position, arrayOf(e.x, e.y))
+            holder.clickRecyclerView = recyclerView
+            holder.clickLocation = arrayOf(e.x, e.y)
+            onItemClickListener?.invoke(holder, position)
             return true
         }
         return false
@@ -202,7 +220,9 @@ open class ItemGesture(private val recyclerView: RecyclerView) :
             val position = recyclerView.getChildLayoutPosition(view)
             val holder =
                     recyclerView.findViewHolderForLayoutPosition(position) as RecyclerView.ViewHolder
-            onItemLongClickListener?.invoke(holder, position, arrayOf(e.x, e.y))
+            holder.clickRecyclerView = recyclerView
+            holder.clickLocation = arrayOf(e.x, e.y)
+            onItemLongClickListener?.invoke(holder, position)
         }
     }
 }

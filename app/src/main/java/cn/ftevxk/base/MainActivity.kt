@@ -51,11 +51,11 @@ class MainActivity : AppCompatActivity() {
 
     private fun initListener() {
         //设置点击事件
-        binding.recycler.setOnItemClickListener { holder, position, location ->
+        binding.recycler.setOnItemClickListener { holder, position ->
             //获取item中间文本控件
             val textView = holder.getItemBinding<ItemMainBinding>()?.textView
             //点击控件toast，其余地方替换一个随机数字
-            if (binding.recycler.isClickControlView(textView, location)) {
+            if (holder.isClickControlView(textView)) {
                 toast(textView?.text ?: (position + 1).toString())
             } else {
                 //拷贝一个仅替换title
@@ -65,7 +65,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
         //长按弹框询问是否删除
-        binding.recycler.setOnItemLongClickListener { _, position, _ ->
+        binding.recycler.setOnItemLongClickListener { _, position ->
             alert("是否删除该条?") {
                 negativeButton("取消") {}
                 positiveButton("确定") {
