@@ -9,7 +9,7 @@ apply plugin: 'kotlin-android-extensions'
 android {
     compileSdkVersion 29
     defaultConfig {
-        applicationId "cn.ftevxk.base"
+        applicationId "cn.ftevxk.demo"
         minSdkVersion 21
         targetSdkVersion 29
         versionCode 1

@@ -1,4 +1,4 @@
-package cn.ftevxk.base
+package cn.ftevxk.demo
 
 import android.os.Bundle
 import android.view.Menu
@@ -8,8 +8,8 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputConnection
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
-import cn.ftevxk.base.databinding.ActivityMainBinding
-import cn.ftevxk.base.databinding.ItemMainBinding
+import cn.ftevxk.demo.databinding.ActivityMainBinding
+import cn.ftevxk.demo.databinding.ItemMainBinding
 import cn.ftevxk.base.extension.*
 import cn.ftevxk.base.widget.InterceptEditText
 import com.pawegio.kandroid.alert
@@ -93,7 +93,7 @@ class MainActivity : AppCompatActivity() {
                     positiveButton("确定") {
                         if (editText.text.isEmpty()) {
                             binding.recycler.setItemModel(
-                                MainItemModel(title = "new-${Random.nextInt(100)}"),
+                                    MainItemModel(title = "new-${Random.nextInt(100)}"),
                                 additional = true
                             )
                         } else {
@@ -102,7 +102,7 @@ class MainActivity : AppCompatActivity() {
                                 toast("ItemModel插入的位置不能大于${models.size}")
                             } else {
                                 binding.recycler.setItemModel(
-                                    MainItemModel(title = "new-${Random.nextInt(100)}"),
+                                        MainItemModel(title = "new-${Random.nextInt(100)}"),
                                     index, true
                                 )
                             }

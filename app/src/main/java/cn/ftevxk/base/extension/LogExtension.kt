@@ -3,7 +3,7 @@
 package cn.ftevxk.base.extension
 
 import android.util.Log
-import cn.ftevxk.base.BuildConfig
+import cn.ftevxk.demo.BuildConfig
 
 object LogExtension {
     //全局Log开关，releaseLog可保留release下的Log

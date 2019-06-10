@@ -23,15 +23,15 @@ import cn.ftevxk.base.common.IDataBindItemModel
 /**
  * 获得item的ViewHolder
  */
-fun RecyclerView.getItemViewHolder(position: Int): DataBindAdapter.ViewHolder? {
-    return findViewHolderForAdapterPosition(position) as? DataBindAdapter.ViewHolder
+fun RecyclerView.getItemViewHolder(position: Int): RecyclerView.ViewHolder? {
+    return findViewHolderForAdapterPosition(position)
 }
 
 /**
  * RecyclerView获得item的ViewDataBinding
  */
 fun <VDB : ViewDataBinding> RecyclerView.getItemBinding(position: Int): VDB? {
-    return getItemViewHolder(position)?.binding as? VDB
+    return (getItemViewHolder(position) as? DataBindAdapter.ViewHolder)?.binding as? VDB
 }
 
 /**

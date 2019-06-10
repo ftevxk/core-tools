@@ -9,7 +9,7 @@
 
         <variable
             name="model"
-            type="cn.ftevxk.base.MainItemModel"/>
+            type="cn.ftevxk.demo.MainItemModel"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
