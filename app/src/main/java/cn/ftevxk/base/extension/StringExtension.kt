@@ -18,8 +18,8 @@ fun String.getFormatDate(format: String, locale: Locale = Locale.CHINA): Date? {
  * 返回指定格式时间 - Date转String
  * @param format yyyy(年) MM(月) dd(日) HH(时) mm(分) ss(秒) EEEE(星期：星期X) EEE(星期：周X)
  */
-fun Date.getFormatString(format: String, locale: Locale = Locale.CHINA): String {
-    return SimpleDateFormat(format, locale).format(this)
+fun Any.getFormatString(format: String, locale: Locale = Locale.CHINA): String {
+    return SimpleDateFormat(format, locale).format(if (this is Date) this else Date())
 }
 
 /**
