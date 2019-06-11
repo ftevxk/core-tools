@@ -1,9 +1,37 @@
-# Kotlin + DataBinding搭建的基础框架
+## 使用方法
 
-## 主要扩展方法
-1. DataBindAdapter：DataBinding通用RecyclerView.Adapter封装，需要配合DataBindItemModel作为数据源使用;
-2. ImageExtension：使用Glide扩展ImageView基本加载功能;
-3. ShapeExtension：简单常用自定义Drawable功能，Kotlin代码可以获得Drawable对象，XML布局可以直接设置继承自TextView控件的背景;
-4. PreferencesExtension：SharedPreferences数据存取，额外支持JSONObject、JSONArray、MutableList、MutableMap（MutableList和MutableMap暂不支持嵌套）;
-5. UnitExtension：数值转换单位值扩展;
-6. LogExtension：Logcat打印附带调用行;
+### 1.LogExtension用法:  
+使用: Any.dLog("logcat")<br>
+打印输出(点击可跳转log位置): 方法名(文件名:行数): 打印内容  
+### 2.PreferencesExtension用法([示例文件](https://github.com/ftevxk/utils/blob/master/app/src/androidTest/java/com/ftevxk/example/ExampleInstrumentedTest.kt)):   
+SP存储: Context.putSpValue("key" to "value", "key1" to "value1")<br>
+SP读取: Context.getSpValue("key", "")
+### 3.UnitExtension用法:
+快速转换dp、sp等值,根据参数类型返回对应类型的值: Any.getDpUnit(10): Int、Any.getSpUnit(10f): Float  
+### 4.ImageExtension用法(加载URL图片并设置为圆形):
+```xml
+<ImageView
+    android:layout_width="64dp"
+    android:layout_height="64dp"
+    android:layout_margin="10dp"
+    bind:circle="@{true}"
+    bind:res="@{`https://kotlinlang.org/assets/images/favicon.ico`}" />
+```
+### 5.ShapeExtension用法(设置为30dp的圆角矩形蓝色背景):
+```xml
+<TextView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    bind:shape_radius="@{30}"
+    bind:shape_solid_color="@{Color.BLUE}"
+    bind:shape_type="@{`rect`}"
+    bind:unit="@{`dp`}"/>
+```
+### 6.DataBindAdapter用法:
+搭配扩展文件([RecyclerViewExtension](https://github.com/ftevxk/utils/blob/master/library/src/main/java/com/ftevxk/base/extension/RecyclerViewExtension.kt)):<br>
+1、扩展RecyclerView的Item点击及长按事件<br>(与DataBindAdapter无关,官方RecyclerView可用,可区分点击的为item中具体的某个控件)<br>
+2、扩展DataBindAdapter数据操作方法、构建简单的列表类型RecyclerView方法<br>
+[Activity文件](https://github.com/ftevxk/utils/blob/master/app/src/main/java/com/ftevxk/example/MainActivity.kt)、 
+[Activity布局](https://github.com/ftevxk/utils/blob/master/app/src/main/res/layout/activity_main.xml)<br>
+[ItemModel文件](https://github.com/ftevxk/utils/blob/master/app/src/main/java/com/ftevxk/example/MainItemModel.kt)、 
+[Item布局](https://github.com/ftevxk/utils/blob/master/app/src/main/res/layout/item_main.xml)
