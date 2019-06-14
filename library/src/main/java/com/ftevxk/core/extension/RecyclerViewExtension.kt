@@ -1,6 +1,6 @@
 @file:Suppress("UNCHECKED_CAST", "unused", "LeakingThis")
 
-package com.ftevxk.base.extension
+package com.ftevxk.core.extension
 
 import android.graphics.Rect
 import android.view.GestureDetector
@@ -12,8 +12,8 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.ftevxk.base.common.DataBindAdapter
-import com.ftevxk.base.common.IDataBindItemModel
+import com.ftevxk.core.common.DataBindAdapter
+import com.ftevxk.core.common.IDataBindItemModel
 
 /****************************************
  * RecyclerView相关扩展

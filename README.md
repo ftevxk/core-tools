@@ -33,7 +33,7 @@ implementation 'com.ftevxk:utils:1.0.0'
     bind:unit="@{`dp`}"/>
 ```
 ### 6.DataBindAdapter用法:
-* [RecyclerViewExtension](https://github.com/ftevxk/utils/blob/master/library/src/main/java/com/ftevxk/base/extension/RecyclerViewExtension.kt)
+* [RecyclerViewExtension](https://github.com/ftevxk/utils/blob/master/library/src/main/java/com/ftevxk/core/extension/RecyclerViewExtension.kt)
 -RecyclerView点击长按事件及一些DataBindAdapter操作扩展
 * 扩展RecyclerView的Item点击及长按事件<br>(与DataBindAdapter无关，官方RecyclerView可用，可区分点击的为item中具体的某个控件)
 * 扩展DataBindAdapter数据操作方法、构建简单的列表类型RecyclerView方法<br>
@@ -41,5 +41,5 @@ implementation 'com.ftevxk:utils:1.0.0'
 [Activity布局](https://github.com/ftevxk/utils/blob/master/app/src/main/res/layout/activity_main.xml)
 * [ItemModel文件](https://github.com/ftevxk/utils/blob/master/app/src/main/java/com/ftevxk/example/MainItemModel.kt)、
 [Item布局](https://github.com/ftevxk/utils/blob/master/app/src/main/res/layout/item_main.xml)
-### 7.InterceptEditText用法([InterceptEditText](https://github.com/ftevxk/utils/blob/master/library/src/main/java/com/ftevxk/base/widget/InterceptEditText.kt)):
+### 7.InterceptEditText用法([InterceptEditText](https://github.com/ftevxk/utils/blob/master/library/src/main/java/com/ftevxk/core/widget/InterceptEditText.kt)):
 * setInterceptListener设置监听，可拦截字符输入、字符删除、按键输入、光标选择

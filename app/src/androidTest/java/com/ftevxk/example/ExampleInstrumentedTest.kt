@@ -1,10 +1,10 @@
 package com.ftevxk.example
 
 import androidx.test.rule.ActivityTestRule
-import com.ftevxk.base.extension.dLog
-import com.ftevxk.base.extension.getSpValue
-import com.ftevxk.base.extension.putSpValue
-import com.ftevxk.base.extension.removeSpKey
+import com.ftevxk.core.extension.dLog
+import com.ftevxk.core.extension.getSpValue
+import com.ftevxk.core.extension.putSpValue
+import com.ftevxk.core.extension.removeSpKey
 import org.junit.Rule
 import org.junit.Test
 

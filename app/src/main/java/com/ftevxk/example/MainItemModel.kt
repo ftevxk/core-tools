@@ -1,7 +1,7 @@
 package com.ftevxk.example
 
 import android.view.View
-import com.ftevxk.base.common.IDataBindItemModel
+import com.ftevxk.core.common.IDataBindItemModel
 
 data class MainItemModel(var title: String = "") : IDataBindItemModel {
     override var diffId: Int = View.generateViewId()

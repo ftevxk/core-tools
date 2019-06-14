@@ -8,8 +8,8 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputConnection
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
-import com.ftevxk.base.extension.*
-import com.ftevxk.base.widget.InterceptEditText
+import com.ftevxk.core.extension.*
+import com.ftevxk.core.widget.InterceptEditText
 import com.ftevxk.example.databinding.ActivityMainBinding
 import com.ftevxk.example.databinding.ItemMainBinding
 import com.pawegio.kandroid.alert

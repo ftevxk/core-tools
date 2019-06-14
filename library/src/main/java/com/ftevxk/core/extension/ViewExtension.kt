@@ -1,6 +1,6 @@
 @file:Suppress("unused")
 
-package com.ftevxk.base.extension
+package com.ftevxk.core.extension
 
 import android.content.Context
 import android.content.ContextWrapper

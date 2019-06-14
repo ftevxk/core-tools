@@ -1,6 +1,6 @@
 @file:Suppress("unused", "DefaultLocale", "UNCHECKED_CAST")
 
-package com.ftevxk.base.extension
+package com.ftevxk.core.extension
 
 import android.content.res.Resources
 import android.util.TypedValue

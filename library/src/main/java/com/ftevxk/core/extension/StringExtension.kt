@@ -1,6 +1,6 @@
 @file:Suppress("unused")
 
-package com.ftevxk.base.extension
+package com.ftevxk.core.extension
 
 import java.security.MessageDigest
 import java.text.SimpleDateFormat

@@ -1,4 +1,4 @@
-package com.ftevxk.base.common
+package com.ftevxk.core.common
 
 /**
  * DataBindAdapter配套使用的ItemModel

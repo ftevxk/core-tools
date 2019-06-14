@@ -1,6 +1,6 @@
 @file:Suppress("UNCHECKED_CAST", "unused")
 
-package com.ftevxk.base.extension
+package com.ftevxk.core.extension
 
 import org.json.JSONArray
 import org.json.JSONObject

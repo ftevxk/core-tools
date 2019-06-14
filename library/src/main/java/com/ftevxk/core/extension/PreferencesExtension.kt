@@ -1,6 +1,6 @@
 @file:Suppress("CommitPrefEdits", "UNCHECKED_CAST", "unused")
 
-package com.ftevxk.base.extension
+package com.ftevxk.core.extension
 
 import android.content.Context
 import androidx.fragment.app.Fragment

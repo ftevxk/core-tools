@@ -1,9 +1,9 @@
 @file:Suppress("unused")
 
-package com.ftevxk.base.extension
+package com.ftevxk.core.extension
 
 import android.util.Log
-import com.ftevxk.base.BuildConfig
+import com.ftevxk.core.BuildConfig
 
 object LogExtension {
     //全局Log开关，releaseLog可保留release下的Log

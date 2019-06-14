@@ -1,12 +1,12 @@
 @file:Suppress("unused", "UNUSED_PARAMETER", "DefaultLocale")
 
-package com.ftevxk.base.extension
+package com.ftevxk.core.extension
 
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
 import android.view.View
 import androidx.databinding.BindingAdapter
-import com.ftevxk.base.extension.ShapeExtension.getShapeDrawable
+import com.ftevxk.core.extension.ShapeExtension.getShapeDrawable
 
 /**
  * Shape类型枚举

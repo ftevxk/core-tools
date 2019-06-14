@@ -1,4 +1,4 @@
-package com.ftevxk.base.extension
+package com.ftevxk.core.extension
 
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable

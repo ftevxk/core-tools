@@ -1,6 +1,6 @@
 @file:Suppress("UNCHECKED_CAST", "MemberVisibilityCanBePrivate")
 
-package com.ftevxk.base.common
+package com.ftevxk.core.common
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

@@ -1,6 +1,6 @@
 @file:Suppress("unused")
 
-package com.ftevxk.base.widget
+package com.ftevxk.core.widget
 
 import android.content.Context
 import android.util.AttributeSet
