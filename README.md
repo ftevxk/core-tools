@@ -2,7 +2,7 @@
 
 Gradle:
 ```
-implementation 'com.ftevxk:utils:1.0.0'
+implementation 'com.ftevxk:core-tools:1.0.0'
 ```
 
 ### 1.LogExtension用法:

@@ -5,13 +5,13 @@ apply plugin: 'com.novoda.bintray-release'
 publish {
     userOrg = 'ftevxk'                                          //bintray注册的用户名
     groupId = 'com.ftevxk'                                      //compile引用时的第1部分groupId
-    artifactId = 'utils'                                        //compile引用时的第2部分项目名
+    artifactId = 'core-tools'                                   //compile引用时的第2部分项目名
     publishVersion = '1.0.0'                                    //compile引用时的第3部分版本号
-    desc = 'kotlin databinding utils'                           //项目描述
+    desc = 'Kotlin + DataBinding Core Tools'                    //项目描述
     repoName = "android"                                        //你的仓库名称，没有填写默认仓库是maven
-    website = 'https://github.com/ftevxk/utils'                 //github 托管地址
+    website = 'https://github.com/ftevxk/core-tools'            //github 托管地址
 
 //    dryRun = false
 //    bintrayUser = 'ftevxk'
-//    bintrayKey = ''                                           //在根目录bintrayKey.zip内加密存储
+//    bintrayKey = ''                                             //在根目录bintrayKey.zip内加密存储
 }
