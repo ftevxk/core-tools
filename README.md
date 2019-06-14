@@ -1,5 +1,10 @@
 ## 使用方法
 
+Gradle:
+```
+implementation 'com.ftevxk:utils:1.0.0'
+```
+
 ### 1.LogExtension用法:
 1)任意地方调用: Any.dLog("logcat")<br>
 2)打印输出(点击可跳转log位置): 方法名(文件名:行数): 打印内容

@@ -1,10 +1,8 @@
 apply plugin: 'com.android.application'
 
 apply plugin: 'kotlin-android'
-
-apply plugin: 'kotlin-kapt'
-
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion 29
@@ -53,7 +51,6 @@ android {
 
     //开启DataBinding
     dataBinding { enabled = true }
-    kapt { generateStubs = true }
 
     //Parcelable快捷序列化 => https://blog.csdn.net/lv_fq/article/details/78966894
     androidExtensions { experimental = true }

@@ -1,7 +1,10 @@
 apply plugin: 'com.android.library'
-apply plugin: 'kotlin-kapt'
+
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+
+apply from: "../publish.gradle"
 
 android {
     compileSdkVersion 29
@@ -20,9 +23,12 @@ android {
         }
     }
 
+    lintOptions {
+        abortOnError false
+    }
+
     //开启DataBinding
     dataBinding { enabled = true }
-    kapt { generateStubs = true }
 }
 
 dependencies {
@@ -36,5 +42,4 @@ dependencies {
 
     //Glide图片加载库 => https://muyangmin.github.io/glide-docs-cn/
     api 'com.github.bumptech.glide:glide:4.9.0'
-    kapt 'com.github.bumptech.glide:compiler:4.9.0'
 }
