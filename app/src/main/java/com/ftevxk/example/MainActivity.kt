@@ -52,7 +52,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initListener() {
-        //设置点击事件
+        //设置Item点击事件
         binding.recycler.setOnItemClickListener { holder, position ->
             //获取item中间文本控件
             val textView = holder.getItemBinding<ItemMainBinding>()?.textView
@@ -67,14 +67,18 @@ class MainActivity : AppCompatActivity() {
                 binding.recycler.setItemModel(model, position)
             }
         }
-        //长按弹框询问是否删除
-        binding.recycler.setOnItemLongClickListener { _, position ->
-            alert("是否删除该条?") {
-                negativeButton("取消") {}
-                positiveButton("确定") {
-                    binding.recycler.removeItemModel(position)
-                }
-            }.show()
+        //设置Item长按事件
+        binding.recycler.setOnItemLongClickListener { holder, position ->
+            val textView = holder.getItemBinding<ItemMainBinding>()?.textView
+            //其他范围才弹框询问是否删除
+            if (!holder.isClickControlView(textView)) {
+                alert("是否删除该条?") {
+                    negativeButton("取消") {}
+                    positiveButton("确定") {
+                        binding.recycler.removeItemModel(position)
+                    }
+                }.show()
+            }
         }
     }
 
