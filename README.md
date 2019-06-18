@@ -20,6 +20,11 @@
 implementation 'com.ftevxk:core-tools:1.0.1'
 ```
 
+### Kotlin、Databinding入门学习文章：
+
+* [Kotlin从入门到沉迷](https://www.jianshu.com/p/e472d638fdb9)
+* [Android DataBinding 从入门到进阶](https://www.jianshu.com/p/bd9016418af2)
+
 ## 主要扩展工具
 
 ### 1.LogExtension用法:
