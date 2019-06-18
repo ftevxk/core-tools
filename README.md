@@ -25,8 +25,8 @@ implementation 'com.ftevxk:core-tools:1.0.1'
 ### 1.LogExtension用法:
 * 任意地方调用: Any.dLog("logcat")
 * 打印输出(点击可跳转log位置): 方法名(文件名:行数): 打印内容
-![image]("https://github.com/ftevxk/core-tools/blob/master/image/4.png")
-![image]("https://github.com/ftevxk/core-tools/blob/master/image/5.png")
+<img src="https://github.com/ftevxk/core-tools/blob/master/image/4.png"/>
+<img src="https://github.com/ftevxk/core-tools/blob/master/image/5.png"/>
 
 ### 2.PreferencesExtension用法([ExampleInstrumentedTest.kt](https://github.com/ftevxk/utils/blob/master/app/src/androidTest/java/com/ftevxk/example/ExampleInstrumentedTest.kt)):
 * SP存储，可同时多个不同类型的Pair: Context.putSpValue("key" to "value", "key1" to 0)
