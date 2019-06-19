@@ -17,7 +17,7 @@
 ## 使用方法
 
 ```
-implementation 'com.ftevxk:core-tools:1.0.1'
+implementation 'com.ftevxk:core-tools:1.0.2'
 ```
 
 ### Kotlin、Databinding入门学习文章：
@@ -51,8 +51,8 @@ implementation 'com.ftevxk:core-tools:1.0.1'
 val editText = InterceptEditText(this)
 editText.setMargins(left = getDpUnit(20), right = getDpUnit(20))
 editText.setInterceptListener(object : InterceptEditText.InterceptListener {
-    override fun commitText(target: InputConnection, 
-                            text: CharSequence, 
+    override fun commitText(target: InputConnection,
+                            text: CharSequence,
                             newCursorPosition: Int): Boolean? {
         dLog("拦截所有输入")
         return false

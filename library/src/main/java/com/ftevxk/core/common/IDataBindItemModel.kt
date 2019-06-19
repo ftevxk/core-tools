@@ -1,5 +1,8 @@
 package com.ftevxk.core.common
 
+import androidx.annotation.LayoutRes
+import androidx.databinding.ViewDataBinding
+
 /**
  * DataBindAdapter配套使用的ItemModel
  * Created by ftevxk on 19-04-26.
@@ -7,29 +10,48 @@ package com.ftevxk.core.common
 interface IDataBindItemModel {
 
     /**
-     * 判断是否为同一条item的差异id
-     * 可用View.generateViewId()保证唯一
+     * 设置layoutRes、variableId等信息
      */
-    var diffId: Int
-
-    /**r
-     * item布局
-     */
-    val layoutRes: Int
-
-    /**
-     * View对应绑定默认ViewModel的ID，BR文件类似R文件由系统统一维护, 格式: 包名+BR+ID
-     */
-    val variableId: Int
-
-    /**
-     * 有额外的VariableId需要绑定可重写
-     */
-    fun getVariablePairs(): List<Pair<Int, Any>>? = null
+    val itemModelInfo: BindItemModelInfo
 
     /**
      * 相同内容，可供adapter数据差异对比
      * 默认不重写的话直接对比对象是否相等，非data class需要重写equals处理
      */
     fun sameContent(): Any? = null
+
+    /**
+     * 重置item布局
+     */
+    fun resetLayoutRes(@LayoutRes layoutRes: Int) {
+        itemModelInfo.layoutRes = layoutRes
+    }
+
+    /**
+     * 重置View对应绑定默认ViewModel的id
+     */
+    fun resetVariableId(variableId: Int) {
+        itemModelInfo.variableId = variableId
+    }
+
+    /**
+     * 重置是否为同一条item的差异id
+     */
+    fun resetDiffId(diffId: Int) {
+        itemModelInfo.diffId = diffId
+    }
+
+    /**
+     * 设置自定义ViewDataBinding
+     */
+    fun <T : ViewDataBinding> setCustomBinding(customBinding: T) {
+        itemModelInfo.customBinding = customBinding
+    }
+
+    /**
+     * 添加额外的VariableId绑定
+     */
+    fun addCustomData(vararg pairs: Pair<Int, Any>) {
+        itemModelInfo.customData = pairs.asList()
+    }
 }

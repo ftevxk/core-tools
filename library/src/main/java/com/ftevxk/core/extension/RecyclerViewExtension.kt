@@ -8,6 +8,7 @@ import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
 import androidx.core.view.GestureDetectorCompat
+import androidx.databinding.BindingAdapter
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
@@ -48,7 +49,7 @@ fun <VDB : ViewDataBinding> RecyclerView.ViewHolder.getItemBinding(): VDB? {
 
 /**
  * 构建简单的列表类型RecyclerView
- * 分割线仅支持LinearLayoutManager
+ * 分割线仅支持LinearLayoutManager、GridLayoutManager
  */
 fun RecyclerView.buildSimpleBindAdapter(divider: Boolean = true) {
     if (adapter == null) {
@@ -60,8 +61,25 @@ fun RecyclerView.buildSimpleBindAdapter(divider: Boolean = true) {
     if (divider) {
         if (layoutManager is LinearLayoutManager && layoutManager !is GridLayoutManager) {
             addItemDecoration(DividerItemDecoration(context, (layoutManager as LinearLayoutManager).orientation))
+        }else if (layoutManager is GridLayoutManager){
+            addItemDecoration(DividerItemDecoration(context, GridLayoutManager.HORIZONTAL))
+            addItemDecoration(DividerItemDecoration(context, GridLayoutManager.VERTICAL))
         }
     }
+}
+
+/**
+ * 设置DataBindAdapter绑定空数据页面，自动根据Item数量处理空数据页面显示隐藏
+ */
+@BindingAdapter("bind:empty_view")
+fun RecyclerView.bindEmptyView(emptyView: View) {
+        getDataBindAdapter()?.bindAdapterListener = object : DataBindAdapter.BindAdapterListener {
+            override fun onNotifyChange(oldModels: MutableList<IDataBindItemModel>,
+                                        newModels: MutableList<IDataBindItemModel>) {
+                super.onNotifyChange(oldModels, newModels)
+                emptyView.visibility = if (newModels.isEmpty()) View.VISIBLE else View.GONE
+            }
+        }
 }
 
 fun RecyclerView.getDataBindAdapter(): DataBindAdapter? {
