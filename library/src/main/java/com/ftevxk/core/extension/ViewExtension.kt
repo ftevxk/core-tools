@@ -63,17 +63,19 @@ fun View.addGesture(listener: GestureDetector.SimpleOnGestureListener) {
 /**
  * 为控件设置外边距
  */
-fun View.setMargins(left: Int? = null, top: Int? = null, right: Int? = null, bottom: Int? = null) {
+fun View.setMargins(left: Number? = null, top: Number? = null,
+                    right: Number? = null, bottom: Number? = null,
+                    horizontal: Number? = null, vertical: Number? = null) {
     post {
         val params = this.layoutParams
         if (params !is ViewGroup.MarginLayoutParams) {
             layoutParams = ViewGroup.MarginLayoutParams(params.width, params.height)
         }
         (params as ViewGroup.MarginLayoutParams).setMargins(
-            left ?: params.leftMargin,
-            top ?: params.topMargin,
-            right ?: params.rightMargin,
-            bottom ?: params.bottomMargin
+                (left?.toInt() ?: horizontal?.toInt()) ?: params.leftMargin,
+                (top?.toInt() ?: vertical?.toInt()) ?: params.topMargin,
+                (right?.toInt() ?: horizontal?.toInt()) ?: params.topMargin,
+                (bottom?.toInt() ?: vertical?.toInt()) ?: params.topMargin
         )
         this.requestLayout()
     }

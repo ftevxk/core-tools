@@ -131,7 +131,7 @@ class MainActivity : AppCompatActivity() {
         editText.hint = "输入需要插入的位置，不输入则插入末尾"
         editText.inputType = EditorInfo.TYPE_CLASS_NUMBER
         editText.textSize = 14f
-        editText.setMargins(left = getDpUnit(20), right = getDpUnit(20))
+        editText.setMargins(horizontal = getDpUnit(20))
         editText.setInterceptListener(object : InterceptEditText.InterceptListener {
             //设置输入拦截，判断输入的位置如果大于models则不让输入
             override fun commitText(target: InputConnection, text: CharSequence, newCursorPosition: Int): Boolean? {
