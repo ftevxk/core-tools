@@ -19,39 +19,48 @@ interface IDataBindItemModel {
      * 默认不重写的话直接对比对象是否相等，非data class需要重写equals处理
      */
     fun sameContent(): Any? = null
+}
 
-    /**
-     * 重置item布局
-     */
-    fun resetLayoutRes(@LayoutRes layoutRes: Int) {
-        itemModelInfo.layoutRes = layoutRes
-    }
+/*********************************
+ * 扩展重置BindItemModelInfo信息
+ *********************************/
 
-    /**
-     * 重置View对应绑定默认ViewModel的id
-     */
-    fun resetVariableId(variableId: Int) {
-        itemModelInfo.variableId = variableId
-    }
+/**
+ * 重置item布局
+ */
+fun <T : IDataBindItemModel> T.resetLayoutRes(@LayoutRes layoutRes: Int): T {
+    itemModelInfo.layoutRes = layoutRes
+    return this
+}
 
-    /**
-     * 重置是否为同一条item的差异id
-     */
-    fun resetDiffId(diffId: Int) {
-        itemModelInfo.diffId = diffId
-    }
+/**
+ * 重置View对应绑定默认ViewModel的id
+ */
+fun <T : IDataBindItemModel> T.resetVariableId(variableId: Int): T {
+    itemModelInfo.variableId = variableId
+    return this
+}
 
-    /**
-     * 设置自定义ViewDataBinding
-     */
-    fun <T : ViewDataBinding> setCustomBinding(customBinding: T) {
-        itemModelInfo.customBinding = customBinding
-    }
+/**
+ * 重置是否为同一条item的差异id
+ */
+fun <T : IDataBindItemModel> T.resetDiffId(diffId: Int): T {
+    itemModelInfo.diffId = diffId
+    return this
+}
 
-    /**
-     * 添加额外的VariableId绑定
-     */
-    fun addCustomData(vararg pairs: Pair<Int, Any>) {
-        itemModelInfo.customData = pairs.asList()
-    }
+/**
+ * 添加额外的VariableId绑定
+ */
+fun <T : IDataBindItemModel> T.addCustomData(vararg pairs: Pair<Int, Any>): T {
+    itemModelInfo.customData = pairs.asList()
+    return this
+}
+
+/**
+ * 设置自定义ViewDataBinding
+ */
+fun <T : IDataBindItemModel, VDB : ViewDataBinding> T.setCustomBinding(customBinding: VDB): T {
+    itemModelInfo.customBinding = customBinding
+    return this
 }
