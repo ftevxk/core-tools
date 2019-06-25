@@ -22,7 +22,7 @@ import androidx.fragment.app.FragmentActivity
 /**
  * 在XML布局里直接自定义drawable的宽高
  */
-@BindingAdapter(value = ["bind:drawable_width", "bind:drawable_height", "bind:unit"], requireAll = false)
+@BindingAdapter(value = ["tools:drawable_width", "tools:drawable_height", "tools:unit"], requireAll = false)
 fun TextView.customDrawableSize(width: Number, height: Number, unit: String? = null) {
     val drawWidth = width.getUnitValue(unit).toInt()
     val drawHeight = height.getUnitValue(unit).toInt()

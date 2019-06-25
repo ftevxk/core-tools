@@ -71,7 +71,7 @@ fun RecyclerView.buildSimpleBindAdapter(divider: Boolean = true) {
 /**
  * 设置DataBindAdapter绑定空数据页面，自动根据Item数量处理空数据页面显示隐藏
  */
-@BindingAdapter("bind:empty_view")
+@BindingAdapter("tools:empty_view")
 fun RecyclerView.bindEmptyView(emptyView: View) {
         getDataBindAdapter()?.bindAdapterListener = object : DataBindAdapter.BindAdapterListener {
             override fun onNotifyChange(oldModels: MutableList<IDataBindItemModel>,

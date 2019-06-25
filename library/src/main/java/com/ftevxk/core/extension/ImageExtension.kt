@@ -19,8 +19,8 @@ import com.bumptech.glide.request.transition.Transition
  * transform和circle仅有一个，优先transform
  * @param res 任意图片资源
  */
-@BindingAdapter(value = ["bind:res", "bind:tint", "bind:placeholder", "bind:error",
-    "bind:transform", "bind:circle", "bind:thumbnail"], requireAll = false)
+@BindingAdapter(value = ["tools:res", "tools:tint", "tools:placeholder", "tools:error",
+    "tools:transform", "tools:circle", "tools:thumbnail"], requireAll = false)
 fun ImageView.load(res: Any?, tint: Int? = null, placeholder: Any? = null, error: Any? = null,
                    transform: Transformation<Bitmap>? = null,
                    circle: Boolean = false, thumbnail: Float = 0f) {

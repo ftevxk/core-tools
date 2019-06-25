@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:bind="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -28,16 +28,16 @@
             android:gravity="center"
             android:text="@{model.title}"
             android:textColor="@android:color/white"
-            bind:pressed_shape_radius="@{Arrays.asList(30f, 30f, 0, 0)}"
-            bind:pressed_shape_solid_color="@{Color.BLUE}"
-            bind:pressed_shape_type="@{`rect`}"
-            bind:shape_dash_gap="@{5}"
-            bind:shape_dash_width="@{10}"
-            bind:shape_radius="@{30}"
-            bind:shape_solid_color="@{@color/colorPrimary}"
-            bind:shape_stroke_color="@{Color.BLUE}"
-            bind:shape_stroke_width="@{2}"
-            bind:shape_type="@{`rect`}"
-            bind:unit="@{`dp`}" />
+            tools:pressed_shape_radius="@{Arrays.asList(30f, 30f, 0, 0)}"
+            tools:pressed_shape_solid_color="@{Color.BLUE}"
+            tools:pressed_shape_type="@{`rect`}"
+            tools:shape_dash_gap="@{5}"
+            tools:shape_dash_width="@{10}"
+            tools:shape_radius="@{30}"
+            tools:shape_solid_color="@{@color/colorPrimary}"
+            tools:shape_stroke_color="@{Color.BLUE}"
+            tools:shape_stroke_width="@{2}"
+            tools:shape_type="@{`rect`}"
+            tools:unit="@{`dp`}" />
     </RelativeLayout>
 </layout>
