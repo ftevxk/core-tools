@@ -17,7 +17,7 @@
 ## 使用方法
 
 ```
-implementation 'com.ftevxk:core-tools:1.0.2'
+implementation 'com.ftevxk:core-tools:1.0.3'
 ```
 
 ### Kotlin、Databinding入门学习文章：
@@ -67,8 +67,8 @@ editText.setInterceptListener(object : InterceptEditText.InterceptListener {
     android:layout_width="64dp"
     android:layout_height="64dp"
     android:layout_margin="10dp"
-    bind:circle="@{true}"
-    bind:res="@{`https://kotlinlang.org/assets/images/favicon.ico`}" />
+    tools:circle="@{true}"
+    tools:res="@{`https://kotlinlang.org/assets/images/favicon.ico`}" />
 ```
 
 ### 5.ShapeExtension用法(设置为30dp的圆角矩形蓝色背景):
@@ -77,10 +77,10 @@ editText.setInterceptListener(object : InterceptEditText.InterceptListener {
 <TextView
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    bind:shape_radius="@{30}"
-    bind:shape_solid_color="@{Color.BLUE}"
-    bind:shape_type="@{`rect`}"
-    bind:unit="@{`dp`}"/>
+    tools:shape_radius="@{30}"
+    tools:shape_solid_color="@{Color.BLUE}"
+    tools:shape_type="@{`rect`}"
+    tools:unit="@{`dp`}"/>
 ```
 
 ### 6.DataBindAdapter用法:
