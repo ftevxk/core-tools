@@ -55,10 +55,10 @@ class MainActivity : AppCompatActivity() {
         //设置Item点击事件
         binding.recycler.setOnItemClickListener { holder, position ->
             //获取item中间文本控件
-            val textView = holder.getItemBinding<ItemMainBinding>()?.textView
+            val button = holder.getItemBinding<ItemMainBinding>()?.button
             //点击控件toast，其余地方替换一个随机数字
-            if (holder.isClickControlView(textView)) {
-                toast(textView?.text ?: (position + 1).toString())
+            if (holder.isClickControlView(button)) {
+                toast(button?.text ?: (position + 1).toString())
             } else {
                 //拷贝一个仅替换title
                 val model = models[position]
@@ -69,9 +69,9 @@ class MainActivity : AppCompatActivity() {
         }
         //设置Item长按事件
         binding.recycler.setOnItemLongClickListener { holder, position ->
-            val textView = holder.getItemBinding<ItemMainBinding>()?.textView
+            val button = holder.getItemBinding<ItemMainBinding>()?.button
             //其他范围才弹框询问是否删除
-            if (!holder.isClickControlView(textView)) {
+            if (!holder.isClickControlView(button)) {
                 alert("是否删除该条?") {
                     negativeButton("取消") {}
                     positiveButton("确定") {
