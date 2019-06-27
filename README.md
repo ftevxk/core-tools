@@ -22,7 +22,13 @@ implementation 'com.ftevxk:core-tools:1.0.3'
 
 ### Kotlin、Databinding入门学习文章：
 
-* [写给 Java 开发者的 Kotlin 教程](http://blog.yanickxia.site/categories/kotlin/page/2/)
+#### 1.Kotlin
+* [Kotlin 简介与入门指南](https://blog.csdn.net/z4909801/article/details/72636852)
+* [Kotlin 进阶](https://blog.csdn.net/ccw0054/article/details/79045504)
+* [Kotlin 的一些实用小技巧](https://www.jianshu.com/p/b8220a278fb0)
+
+#### 2.DataBinding
+* [Android数据绑定框架DataBinding，堪称解决界面逻辑的黑科技](https://www.jianshu.com/p/2d3227d9707d)
 * [Android DataBinding 从入门到进阶](https://www.jianshu.com/p/bd9016418af2)
 
 ## 主要扩展工具
