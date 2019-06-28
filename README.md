@@ -28,7 +28,8 @@ implementation 'com.ftevxk:core-tools:1.0.3'
 * [Kotlin 的一些实用小技巧](https://www.jianshu.com/p/b8220a278fb0)
 
 #### 2.DataBinding
-* [Android数据绑定框架DataBinding，堪称解决界面逻辑的黑科技](https://www.jianshu.com/p/2d3227d9707d)
+* [Android DataBinding 实战全解](https://www.jianshu.com/p/0fe0b6b7dae1)
+* [Android Databinding 使用全面总结](https://www.jianshu.com/p/572822d9eff9)
 * [Android DataBinding 从入门到进阶](https://www.jianshu.com/p/bd9016418af2)
 
 ## 主要扩展工具
@@ -55,7 +56,7 @@ implementation 'com.ftevxk:core-tools:1.0.3'
 
 ```kotlin
 val editText = InterceptEditText(this)
-editText.setMargins(left = getDpUnit(20), right = getDpUnit(20))
+editText.setMargins(horizontal = getDpUnit(20))
 editText.setInterceptListener(object : InterceptEditText.InterceptListener {
     override fun commitText(target: InputConnection,
                             text: CharSequence,
