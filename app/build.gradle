@@ -62,10 +62,14 @@ dependencies {
     implementation 'com.google.android.material:material:1.0.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
 
+    //引用core-tools依赖库
+    implementation project(':library')
+
     //Kotlin扩展库 => https://github.com/pawegio/KAndroid
     implementation 'com.pawegio.kandroid:kandroid:0.8.8@aar'
 
-    implementation project(':library')
+    //Glide图片加载库 => https://muyangmin.github.io/glide-docs-cn/
+    implementation 'com.github.bumptech.glide:glide:4.9.0'
 
 //   //官方页面导航库 => https://www.jianshu.com/p/9e08355ed0ff
 //   implementation "androidx.navigation:navigation-fragment-ktx:+"

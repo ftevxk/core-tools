@@ -16,10 +16,14 @@
 
 ## 使用方法
 
-[ ![Download](https://api.bintray.com/packages/ftevxk/android/core-tools/images/download.svg) ](https://bintray.com/ftevxk/android/core-tools/_latestVersion)
+将`${latestVersion}`改成最新版本：[ ![Download](https://api.bintray.com/packages/ftevxk/android/core-tools/images/download.svg) ](https://bintray.com/ftevxk/android/core-tools/_latestVersion)
 
 ```groovy
 implementation 'com.ftevxk:core-tools:${latestVersion}'
+
+//内部依赖AndroidX版本的RecyclerView，使用ImageExtension需要依赖Glide4
+implementation 'androidx.recyclerview:recyclerview:1.0.0'
+implementation 'com.github.bumptech.glide:glide:4.9.0'
 ```
 
 ### Kotlin、Databinding入门学习文章：
