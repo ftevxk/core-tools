@@ -7,6 +7,7 @@ import android.os.Build
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
+import androidx.annotation.LayoutRes
 import androidx.core.view.GestureDetectorCompat
 import androidx.databinding.BindingAdapter
 import androidx.databinding.ViewDataBinding
@@ -61,7 +62,7 @@ fun RecyclerView.buildSimpleBindAdapter(divider: Boolean = true) {
     if (divider) {
         if (layoutManager is LinearLayoutManager && layoutManager !is GridLayoutManager) {
             addItemDecoration(DividerItemDecoration(context, (layoutManager as LinearLayoutManager).orientation))
-        }else if (layoutManager is GridLayoutManager){
+        } else if (layoutManager is GridLayoutManager) {
             addItemDecoration(DividerItemDecoration(context, GridLayoutManager.HORIZONTAL))
             addItemDecoration(DividerItemDecoration(context, GridLayoutManager.VERTICAL))
         }
@@ -73,13 +74,13 @@ fun RecyclerView.buildSimpleBindAdapter(divider: Boolean = true) {
  */
 @BindingAdapter("tools:empty_view")
 fun RecyclerView.bindEmptyView(emptyView: View) {
-        getDataBindAdapter()?.bindAdapterListener = object : DataBindAdapter.BindAdapterListener {
-            override fun onNotifyChange(oldModels: MutableList<IDataBindItemModel>,
-                                        newModels: MutableList<IDataBindItemModel>) {
-                super.onNotifyChange(oldModels, newModels)
-                emptyView.visibility = if (newModels.isEmpty()) View.VISIBLE else View.GONE
-            }
+    getDataBindAdapter()?.bindAdapterListener = object : DataBindAdapter.BindAdapterListener {
+        override fun onNotifyChange(oldModels: MutableList<IDataBindItemModel>,
+                                    newModels: MutableList<IDataBindItemModel>) {
+            super.onNotifyChange(oldModels, newModels)
+            emptyView.visibility = if (newModels.isEmpty()) View.VISIBLE else View.GONE
         }
+    }
 }
 
 fun RecyclerView.getDataBindAdapter(): DataBindAdapter? {
@@ -98,8 +99,9 @@ fun <T : IDataBindItemModel> RecyclerView.getItemModel(position: Int): T? {
     return getDataBindAdapter()?.getItemModel(position)
 }
 
-fun <T : IDataBindItemModel> RecyclerView.setItemModel(model: T, position: Int = -1, additional: Boolean = false) {
-    getDataBindAdapter()?.setItemModel(model, position, additional)
+fun <T : IDataBindItemModel> RecyclerView.setItemModel(
+        model: T, position: Int = -1, additional: Boolean = false): DataBindAdapter? {
+    return getDataBindAdapter()?.setItemModel(model, position, additional)
 }
 
 fun RecyclerView.setBindAdapterListener(listener: DataBindAdapter.BindAdapterListener) {
@@ -120,6 +122,10 @@ fun <T : IDataBindItemModel> RecyclerView.ViewHolder.getItemModels(): MutableLis
 
 fun <T : IDataBindItemModel> RecyclerView.ViewHolder.getItemModel(position: Int): T? {
     return (this as? DataBindAdapter.ViewHolder)?.adapter?.getItemModel(position)
+}
+
+fun RecyclerView.resetLayoutRes(@LayoutRes layoutRes: Int?, vararg exclude: Int) {
+    getDataBindAdapter()?.resetLayoutRes(layoutRes, *exclude)
 }
 
 /*****************************************************************

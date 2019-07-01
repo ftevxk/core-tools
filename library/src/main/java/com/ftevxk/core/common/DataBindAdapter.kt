@@ -5,6 +5,7 @@ package com.ftevxk.core.common
 import android.util.SparseIntArray
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.annotation.LayoutRes
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.DiffUtil
@@ -18,6 +19,8 @@ import androidx.recyclerview.widget.RecyclerView
  */
 class DataBindAdapter : RecyclerView.Adapter<DataBindAdapter.ViewHolder>() {
 
+    private var unifyLayoutRes: Int? = null
+    private var unifyExclude: IntArray? = null
     private var models: MutableList<IDataBindItemModel>? = null
     private val customBindingPositions by lazy { SparseIntArray() }
 
@@ -47,7 +50,7 @@ class DataBindAdapter : RecyclerView.Adapter<DataBindAdapter.ViewHolder>() {
      * 设置单个ItemModel
      * @param additional 是否为追加数据
      */
-    fun <T : IDataBindItemModel> setItemModel(model: T, position: Int = -1, additional: Boolean = false) {
+    fun <T : IDataBindItemModel> setItemModel(model: T, position: Int = -1, additional: Boolean = false): DataBindAdapter {
         //旧数据临时变量
         val tempModels = if (bindAdapterListener != null) {
             mutableListOf(models) as MutableList<IDataBindItemModel>
@@ -69,6 +72,7 @@ class DataBindAdapter : RecyclerView.Adapter<DataBindAdapter.ViewHolder>() {
         }
         //通知回调
         bindAdapterListener?.onNotifyChange(tempModels, getItemModels())
+        return this
     }
 
     /**
@@ -146,12 +150,21 @@ class DataBindAdapter : RecyclerView.Adapter<DataBindAdapter.ViewHolder>() {
         models = newModels as MutableList<IDataBindItemModel>
     }
 
+    /**
+     * 替换统一布局资源
+     * @param exclude 需要排除的位置，用ItemModel原layoutRes
+     */
+    fun resetLayoutRes(@LayoutRes layoutRes: Int?, vararg exclude: Int) {
+        unifyLayoutRes = layoutRes
+        unifyExclude = exclude
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         //判断类型是否为自定义ViewDataBinding
         val customPosition = customBindingPositions.get(viewType, -1)
-        val binding = if (customPosition != -1){
+        val binding = if (customPosition != -1) {
             getItemModel<IDataBindItemModel>(customPosition)!!.itemModelInfo.customBinding!!
-        }else {
+        } else {
             DataBindingUtil.inflate<ViewDataBinding>(
                     LayoutInflater.from(parent.context), viewType, parent, false
             )
@@ -168,7 +181,7 @@ class DataBindAdapter : RecyclerView.Adapter<DataBindAdapter.ViewHolder>() {
             holder.binding.setVariable(model.itemModelInfo.variableId, model)
         }
         //自定义的VariableId绑定
-        model.itemModelInfo.customData?.forEach{
+        model.itemModelInfo.customData?.forEach {
             holder.binding.setVariable(it.first, it.second)
         }
         bindAdapterListener?.onBindViewHolderAfter(holder, position, model)
@@ -189,7 +202,11 @@ class DataBindAdapter : RecyclerView.Adapter<DataBindAdapter.ViewHolder>() {
             customBindingPositions.put(typeKey, position)
             typeKey
         } else {
-            info.layoutRes
+            if (unifyExclude?.contains(position) == true) {
+                info.layoutRes
+            } else {
+                unifyLayoutRes ?: info.layoutRes
+            }
         }
     }
 
@@ -229,9 +246,9 @@ class DataBindAdapter : RecyclerView.Adapter<DataBindAdapter.ViewHolder>() {
         return result ?: super.onFailedToRecycleView(holder)
     }
 
-    /****************************
-     * ViewHolder、监听接口
-     ****************************/
+    /********************************************************
+     * ViewHolder及BindAdapterListener接口
+     ********************************************************/
 
     class ViewHolder(val adapter: DataBindAdapter, val binding: ViewDataBinding) : RecyclerView.ViewHolder(binding.root)
 
