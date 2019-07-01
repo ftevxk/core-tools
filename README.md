@@ -16,8 +16,10 @@
 
 ## 使用方法
 
-```
-implementation 'com.ftevxk:core-tools:1.0.3'
+[ ![Download](https://api.bintray.com/packages/ftevxk/android/core-tools/images/download.svg) ](https://bintray.com/ftevxk/android/core-tools/_latestVersion)
+
+```groovy
+implementation 'com.ftevxk:core-tools:${latestVersion}'
 ```
 
 ### Kotlin、Databinding入门学习文章：
