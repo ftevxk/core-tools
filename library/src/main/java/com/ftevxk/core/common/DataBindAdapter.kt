@@ -165,9 +165,7 @@ class DataBindAdapter : RecyclerView.Adapter<DataBindAdapter.ViewHolder>() {
         val binding = if (customPosition != -1) {
             getItemModel<IDataBindItemModel>(customPosition)!!.itemModelInfo.customBinding!!
         } else {
-            DataBindingUtil.inflate<ViewDataBinding>(
-                    LayoutInflater.from(parent.context), viewType, parent, false
-            )
+            DataBindingUtil.inflate(LayoutInflater.from(parent.context), viewType, parent, false)
         }
         bindAdapterListener?.onCreateViewHolder(binding)
         return ViewHolder(this, binding)

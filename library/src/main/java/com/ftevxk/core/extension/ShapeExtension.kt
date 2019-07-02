@@ -7,7 +7,6 @@ import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.StateListDrawable
 import android.view.View
 import androidx.databinding.BindingAdapter
-import java.util.*
 
 /**
  * Shape类型枚举
@@ -322,10 +321,10 @@ private fun View.getBindShapeDrawable(
     val unitRadius = when (radius) {
         is Number -> radius.getUnitValue(unit)
         is List<*> -> {
-            Arrays.asList((radius[0] as? Number).getUnitValue(unit),
-                    (radius[1] as? Number).getUnitValue(unit),
-                    (radius[2] as? Number).getUnitValue(unit),
-                    (radius[3] as? Number).getUnitValue(unit))
+            listOf((radius[0] as? Number).getUnitValue(unit),
+                (radius[1] as? Number).getUnitValue(unit),
+                (radius[2] as? Number).getUnitValue(unit),
+                (radius[3] as? Number).getUnitValue(unit))
         }
         else -> radius
     }

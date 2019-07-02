@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package com.ftevxk.core.common
 
 import androidx.annotation.LayoutRes
