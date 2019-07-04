@@ -61,14 +61,11 @@ fun RecyclerView.ViewHolder.isClickControlView(view: View?): Boolean {
     recyclerView.getGlobalVisibleRect(recyclerRect)
     val viewRect = Rect()
     view.getGlobalVisibleRect(viewRect)
-    if (clickLocation[0] >= viewRect.left - recyclerRect.left &&
-        clickLocation[0] <= viewRect.right - recyclerRect.left &&
-        clickLocation[1] >= viewRect.top - recyclerRect.top &&
-        clickLocation[1] <= viewRect.bottom - recyclerRect.top
-    ) {
-        return true
-    }
-    return false
+
+    return clickLocation[0] >= viewRect.left - recyclerRect.left &&
+            clickLocation[0] <= viewRect.right - recyclerRect.left &&
+            clickLocation[1] >= viewRect.top - recyclerRect.top &&
+            clickLocation[1] <= viewRect.bottom - recyclerRect.top
 }
 
 /**
@@ -231,7 +228,7 @@ fun <T : IDataBindItemModel> RecyclerView.getItemModel(position: Int): T? {
 }
 
 fun <T : IDataBindItemModel> RecyclerView.setItemModel(
-        model: T, position: Int = -1, additional: Boolean = false): DataBindAdapter? {
+    model: T, position: Int = -1, additional: Boolean = false): DataBindAdapter? {
     return getDataBindAdapter()?.setItemModel(model, position, additional)
 }
 
