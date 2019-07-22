@@ -7,7 +7,6 @@ import android.os.Build
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
-import androidx.annotation.LayoutRes
 import androidx.core.view.GestureDetectorCompat
 import androidx.databinding.BindingAdapter
 import androidx.databinding.ViewDataBinding
@@ -198,6 +197,16 @@ fun RecyclerView.buildSimpleBindAdapter(divider: Boolean = true) {
 }
 
 /**
+ * XML布局绑定DataBindAdapter
+ */
+@BindingAdapter("tools:bind_data_adapter")
+fun RecyclerView.bindDataAdapter(bindDataAdapter: Boolean) {
+    if (bindDataAdapter) {
+        this.adapter = DataBindAdapter()
+    }
+}
+
+/**
  * 设置DataBindAdapter绑定空数据页面，自动根据Item数量处理空数据页面显示隐藏
  */
 @BindingAdapter("tools:empty_view")
@@ -215,8 +224,16 @@ fun RecyclerView.getDataBindAdapter(): DataBindAdapter? {
     return adapter as? DataBindAdapter
 }
 
+fun <T : IDataBindItemModel> RecyclerView.diffItemModels(newModels: MutableList<T>) {
+    getDataBindAdapter()?.diffItemModels(newModels)
+}
+
 fun <T : IDataBindItemModel> RecyclerView.setItemModels(newModels: MutableList<T>) {
     getDataBindAdapter()?.setItemModels(newModels)
+}
+
+fun <T : IDataBindItemModel> RecyclerView.addItemModels(newModels: MutableList<T>) {
+    getDataBindAdapter()?.addItemModels(newModels)
 }
 
 fun <T : IDataBindItemModel> RecyclerView.getItemModels(): MutableList<T>? {
@@ -250,8 +267,4 @@ fun <T : IDataBindItemModel> RecyclerView.ViewHolder.getItemModels(): MutableLis
 
 fun <T : IDataBindItemModel> RecyclerView.ViewHolder.getItemModel(position: Int): T? {
     return (this as? DataBindAdapter.ViewHolder)?.adapter?.getItemModel(position)
-}
-
-fun RecyclerView.resetLayoutRes(@LayoutRes layoutRes: Int?, vararg exclude: Int) {
-    getDataBindAdapter()?.resetLayoutRes(layoutRes, *exclude)
 }

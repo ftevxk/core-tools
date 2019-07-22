@@ -1,11 +1,10 @@
-@file:Suppress("UNCHECKED_CAST", "MemberVisibilityCanBePrivate")
+@file:Suppress("UNCHECKED_CAST", "MemberVisibilityCanBePrivate", "unused")
 
 package com.ftevxk.core.common
 
 import android.util.SparseIntArray
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.annotation.LayoutRes
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.DiffUtil
@@ -19,8 +18,6 @@ import androidx.recyclerview.widget.RecyclerView
  */
 class DataBindAdapter : RecyclerView.Adapter<DataBindAdapter.ViewHolder>() {
 
-    private var unifyLayoutRes: Int? = null
-    private var unifyExclude: IntArray? = null
     private var models: MutableList<IDataBindItemModel>? = null
     private val customBindingPositions by lazy { SparseIntArray() }
 
@@ -111,9 +108,30 @@ class DataBindAdapter : RecyclerView.Adapter<DataBindAdapter.ViewHolder>() {
     }
 
     /**
-     * 设置ItemModel列表，内部判断数据差异进行通知刷新界面
+     * 追加ItemModels
+     */
+    fun <T : IDataBindItemModel> addItemModels(newModels: MutableList<T>) {
+        val start = itemCount
+        models?.addAll(newModels)
+        notifyItemRangeInserted(start, newModels.size)
+        //差异比较后通知回调
+        bindAdapterListener?.onNotifyChange(models!!.subList(0, start), getItemModels())
+    }
+
+    /**
+     * 设置ItemModels
      */
     fun <T : IDataBindItemModel> setItemModels(newModels: MutableList<T>) {
+        bindAdapterListener?.onNotifyChange(getItemModels(), newModels as MutableList<IDataBindItemModel>)
+        //将新数据覆盖旧数据
+        models = newModels as MutableList<IDataBindItemModel>
+        notifyDataSetChanged()
+    }
+
+    /**
+     * 设置ItemModel列表，内部判断数据差异进行通知刷新界面
+     */
+    fun <T : IDataBindItemModel> diffItemModels(newModels: MutableList<T>) {
         //对比新旧数据差异
         val diffResult = DiffUtil.calculateDiff(object : DiffUtil.Callback() {
             override fun getOldListSize() = itemCount
@@ -148,15 +166,6 @@ class DataBindAdapter : RecyclerView.Adapter<DataBindAdapter.ViewHolder>() {
         bindAdapterListener?.onNotifyChange(getItemModels(), newModels as MutableList<IDataBindItemModel>)
         //将新数据覆盖旧数据
         models = newModels as MutableList<IDataBindItemModel>
-    }
-
-    /**
-     * 替换统一布局资源
-     * @param exclude 需要排除的位置，用ItemModel原layoutRes
-     */
-    fun resetLayoutRes(@LayoutRes layoutRes: Int?, vararg exclude: Int) {
-        unifyLayoutRes = layoutRes
-        unifyExclude = exclude
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -200,11 +209,7 @@ class DataBindAdapter : RecyclerView.Adapter<DataBindAdapter.ViewHolder>() {
             customBindingPositions.put(typeKey, position)
             typeKey
         } else {
-            if (unifyExclude?.contains(position) == true) {
-                info.layoutRes
-            } else {
-                unifyLayoutRes ?: info.layoutRes
-            }
+            info.layoutRes
         }
     }
 
