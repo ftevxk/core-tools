@@ -16,7 +16,7 @@
 
 ## 使用方法
 
-将`${latestVersion}`改成最新版本：[ ![Download](https://api.bintray.com/packages/ftevxk/android/core-tools/images/download.svg) ](https://bintray.com/ftevxk/android/core-tools/_latestVersion)
+将`${latestVersion}`改成最新版本：[![Download](https://api.bintray.com/packages/ftevxk/android/core-tools/images/download.svg)](https://bintray.com/ftevxk/android/core-tools/_latestVersion)
 
 ```groovy
 implementation 'com.ftevxk:core-tools:${latestVersion}'
@@ -90,9 +90,9 @@ editText.setInterceptListener(object : InterceptEditText.InterceptListener {
 <TextView
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    tools:shape_radius="@{30}"
-    tools:shape_solid_color="@{Color.BLUE}"
-    tools:shape_type="@{`rect`}"
+    tools:bg_default_shape_radius="@{30}"
+    tools:bg_default_shape_solid_color="@{Color.BLUE}"
+    tools:bg_default_shape_type="@{`rect`}"
     tools:unit="@{`dp`}"/>
 ```
 

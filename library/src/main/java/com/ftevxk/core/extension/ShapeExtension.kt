@@ -7,6 +7,7 @@ import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.StateListDrawable
 import android.view.View
 import androidx.databinding.BindingAdapter
+import com.bumptech.glide.Glide
 
 /**
  * Shape类型枚举
@@ -73,82 +74,96 @@ object ShapeExtension {
 
 /**
  * Shape背景扩展设置
- * tools:shape_type="@{`rect`}" Shape类型设置 ==> 矩形: rect; 椭圆形: oval; 线形: line; 环形: ring
  * tools:unit="@{`dp`}" 单位类型设置 ==> px; dp; sp; pt; in; mm; 默认不设置为dp单位
- * tools:shape_radius="@{30}" 设置四周相同角度
- * tools:shape_radius="@{Arrays.asList(30, 30, 30, 30)}" 设置左上、右上、左下、右下的角度，需要引包 <import type="java.util.Arrays" />
+ * tools:bg_shape_type="@{`rect`}" Shape类型设置 ==> 矩形: rect; 椭圆形: oval; 线形: line; 环形: ring
+ * tools:bg_shape_radius="@{30}" 设置四周相同角度
+ * tools:bg_shape_radius="@{Arrays.asList(30, 30, 30, 30)}" 设置左上、右上、左下、右下的角度，需要引包 <import type="java.util.Arrays" />
  * 其余参照Shape用法，可设置pressed、checked、focused、selected、clickable、enabled等状态
+ * 通过tools:bg_(状态)_state_res设置本地图片资源
  */
 @BindingAdapter(value = [
     "tools:unit",
-    //默认状态
-    "tools:default_background",
-    "tools:shape_type",
-    "tools:shape_solid_color",
-    "tools:shape_stroke_width",
-    "tools:shape_stroke_color",
-    "tools:shape_dash_width",
-    "tools:shape_dash_gap",
-    "tools:shape_radius",
-    //pressed状态
-    "tools:pressed_background",
-    "tools:pressed_shape_type",
-    "tools:pressed_shape_solid_color",
-    "tools:pressed_shape_stroke_width",
-    "tools:pressed_shape_stroke_color",
-    "tools:pressed_shape_dash_width",
-    "tools:pressed_shape_dash_gap",
-    "tools:pressed_shape_radius",
-    //checked状态
-    "tools:checked_background",
-    "tools:checked_shape_type",
-    "tools:checked_shape_solid_color",
-    "tools:checked_shape_stroke_width",
-    "tools:checked_shape_stroke_color",
-    "tools:checked_shape_dash_width",
-    "tools:checked_shape_dash_gap",
-    "tools:checked_shape_radius",
-    //focused状态
-    "tools:focused_background",
-    "tools:focused_shape_type",
-    "tools:focused_shape_solid_color",
-    "tools:focused_shape_stroke_width",
-    "tools:focused_shape_stroke_color",
-    "tools:focused_shape_dash_width",
-    "tools:focused_shape_dash_gap",
-    "tools:focused_shape_radius",
-    //selected状态
-    "tools:selected_background",
-    "tools:selected_shape_type",
-    "tools:selected_shape_solid_color",
-    "tools:selected_shape_stroke_width",
-    "tools:selected_shape_stroke_color",
-    "tools:selected_shape_dash_width",
-    "tools:selected_shape_dash_gap",
-    "tools:selected_shape_radius",
-    //clickable状态
-    "tools:clickable_background",
-    "tools:clickable_shape_type",
-    "tools:clickable_shape_solid_color",
-    "tools:clickable_shape_stroke_width",
-    "tools:clickable_shape_stroke_color",
-    "tools:clickable_shape_dash_width",
-    "tools:clickable_shape_dash_gap",
-    "tools:clickable_shape_radius",
-    //enabled状态
-    "tools:enabled_background",
-    "tools:enabled_shape_type",
-    "tools:enabled_shape_solid_color",
-    "tools:enabled_shape_stroke_width",
-    "tools:enabled_shape_stroke_color",
-    "tools:enabled_shape_dash_width",
-    "tools:enabled_shape_dash_gap",
-    "tools:enabled_shape_radius"
+    //默认状态资源
+    "tools:bg_default_state_res",
+    //默认状态自定义Shape
+    "tools:bg_default_shape_type",
+    "tools:bg_default_shape_solid_color",
+    "tools:bg_default_shape_stroke_width",
+    "tools:bg_default_shape_stroke_color",
+    "tools:bg_default_shape_dash_width",
+    "tools:bg_default_shape_dash_gap",
+    "tools:bg_default_shape_radius",
+
+    //pressed状态资源
+    "tools:bg_pressed_state_res",
+    //pressed状态自定义Shape
+    "tools:bg_pressed_shape_type",
+    "tools:bg_pressed_shape_solid_color",
+    "tools:bg_pressed_shape_stroke_width",
+    "tools:bg_pressed_shape_stroke_color",
+    "tools:bg_pressed_shape_dash_width",
+    "tools:bg_pressed_shape_dash_gap",
+    "tools:bg_pressed_shape_radius",
+
+    //checked状态资源
+    "tools:bg_checked_state_res",
+    //checked状态自定义Shape
+    "tools:bg_checked_shape_type",
+    "tools:bg_checked_shape_solid_color",
+    "tools:bg_checked_shape_stroke_width",
+    "tools:bg_checked_shape_stroke_color",
+    "tools:bg_checked_shape_dash_width",
+    "tools:bg_checked_shape_dash_gap",
+    "tools:bg_checked_shape_radius",
+
+    //focused状态资源
+    "tools:bg_focused_state_res",
+    //focused状态自定义Shape
+    "tools:bg_focused_shape_type",
+    "tools:bg_focused_shape_solid_color",
+    "tools:bg_focused_shape_stroke_width",
+    "tools:bg_focused_shape_stroke_color",
+    "tools:bg_focused_shape_dash_width",
+    "tools:bg_focused_shape_dash_gap",
+    "tools:bg_focused_shape_radius",
+
+    //selected状态资源
+    "tools:bg_selected_state_res",
+    //selected状态自定义Shape
+    "tools:bg_selected_shape_type",
+    "tools:bg_selected_shape_solid_color",
+    "tools:bg_selected_shape_stroke_width",
+    "tools:bg_selected_shape_stroke_color",
+    "tools:bg_selected_shape_dash_width",
+    "tools:bg_selected_shape_dash_gap",
+    "tools:bg_selected_shape_radius",
+
+    //checkable状态资源
+    "tools:bg_checkable_state_res",
+    //checkable状态自定义Shape
+    "tools:bg_checkable_shape_type",
+    "tools:bg_checkable_shape_solid_color",
+    "tools:bg_checkable_shape_stroke_width",
+    "tools:bg_checkable_shape_stroke_color",
+    "tools:bg_checkable_shape_dash_width",
+    "tools:bg_checkable_shape_dash_gap",
+    "tools:bg_checkable_shape_radius",
+
+    //enabled状态资源
+    "tools:bg_enabled_state_res",
+    //enabled状态自定义Shape
+    "tools:bg_enabled_shape_type",
+    "tools:bg_enabled_shape_solid_color",
+    "tools:bg_enabled_shape_stroke_width",
+    "tools:bg_enabled_shape_stroke_color",
+    "tools:bg_enabled_shape_dash_width",
+    "tools:bg_enabled_shape_dash_gap",
+    "tools:bg_enabled_shape_radius"
 ], requireAll = false)
 fun View.setShapeBackground(
         unit: String? = null,
         //默认状态
-        backgroundDrawable: Drawable? = null,
+        defaultStateRes: Any? = null,
         typeStr: String? = null,
         solidColor: Int? = null,
         strokeWidth: Number? = null,
@@ -157,7 +172,7 @@ fun View.setShapeBackground(
         dashGap: Number? = null,
         radius: Any? = null,
         //pressed状态
-        backgroundPressed: Drawable? = null,
+        pressedStateRes: Any? = null,
         typeStrPressed: String? = null,
         solidColorPressed: Int? = null,
         strokeWidthPressed: Number? = null,
@@ -166,7 +181,7 @@ fun View.setShapeBackground(
         dashGapPressed: Number? = null,
         radiusPressed: Any? = null,
         //checked状态
-        backgroundChecked: Drawable? = null,
+        checkedStateRes: Any? = null,
         typeStrChecked: String? = null,
         solidColorChecked: Int? = null,
         strokeWidthChecked: Number? = null,
@@ -175,7 +190,7 @@ fun View.setShapeBackground(
         dashGapChecked: Number? = null,
         radiusChecked: Any? = null,
         //focused状态
-        backgroundFocused: Drawable? = null,
+        focusedStateRes: Any? = null,
         typeStrFocused: String? = null,
         solidColorFocused: Int? = null,
         strokeWidthFocused: Number? = null,
@@ -184,7 +199,7 @@ fun View.setShapeBackground(
         dashGapFocused: Number? = null,
         radiusFocused: Any? = null,
         //selected状态
-        backgroundSelected: Drawable? = null,
+        selectedStateRes: Any? = null,
         typeStrSelected: String? = null,
         solidColorSelected: Int? = null,
         strokeWidthSelected: Number? = null,
@@ -192,8 +207,8 @@ fun View.setShapeBackground(
         dashWidthSelected: Number? = null,
         dashGapSelected: Number? = null,
         radiusSelected: Any? = null,
-        //clickable状态
-        backgroundClickable: Drawable? = null,
+        //checkable状态
+        checkableStateRes: Any? = null,
         typeStrClickable: String? = null,
         solidColorClickable: Int? = null,
         strokeWidthClickable: Number? = null,
@@ -202,65 +217,61 @@ fun View.setShapeBackground(
         dashGapClickable: Number? = null,
         radiusClickable: Any? = null,
         //enabled状态
-        backgroundEnabled: Drawable? = null,
+        enabledStateRes: Any? = null,
         typeStrEnabled: String? = null,
         solidColorEnabled: Int? = null,
         strokeWidthEnabled: Number? = null,
         strokeColorEnabled: Int? = null,
         dashWidthEnabled: Number? = null,
         dashGapEnabled: Number? = null,
-        radiusEnabled: Any? = null
-) {
-    val stateListDrawable = StateListDrawable()
+        radiusEnabled: Any? = null) {
 
-    //pressed状态
-    addStateDrawable(android.R.attr.state_pressed, "pressed_",
-            stateListDrawable, unit, backgroundPressed,
-            typeStrPressed ?: typeStr, solidColorPressed,
-            strokeWidthPressed, strokeColorPressed,
-            dashWidthPressed, dashGapPressed, radiusPressed)
+    Thread {
+        val stateListDrawable = StateListDrawable()
 
-    //checked状态
-    addStateDrawable(android.R.attr.state_checked, "checked_",
-            stateListDrawable, unit, backgroundChecked,
-            typeStrChecked ?: typeStr, solidColorChecked,
-            strokeWidthChecked, strokeColorChecked,
-            dashWidthChecked, dashGapChecked, radiusChecked)
+        //pressed状态
+        addStateDrawable(android.R.attr.state_pressed, "bg_pressed_",
+                stateListDrawable, unit, pressedStateRes,
+                typeStrPressed ?: typeStr, solidColorPressed,
+                strokeWidthPressed, strokeColorPressed,
+                dashWidthPressed, dashGapPressed, radiusPressed)
+        //checked状态
+        addStateDrawable(android.R.attr.state_checked, "bg_checked_",
+                stateListDrawable, unit, checkedStateRes,
+                typeStrChecked ?: typeStr, solidColorChecked,
+                strokeWidthChecked, strokeColorChecked,
+                dashWidthChecked, dashGapChecked, radiusChecked)
+        //focused状态
+        addStateDrawable(android.R.attr.state_focused, "bg_focused_",
+                stateListDrawable, unit, focusedStateRes,
+                typeStrFocused ?: typeStr, solidColorFocused,
+                strokeWidthFocused, strokeColorFocused,
+                dashWidthFocused, dashGapFocused, radiusFocused)
+        //selected状态
+        addStateDrawable(android.R.attr.state_selected, "bg_selected_",
+                stateListDrawable, unit, selectedStateRes,
+                typeStrSelected ?: typeStr, solidColorSelected,
+                strokeWidthSelected, strokeColorSelected,
+                dashWidthSelected, dashGapSelected, radiusSelected)
+        //checkable状态
+        addStateDrawable(android.R.attr.state_checkable, "bg_checkable_",
+                stateListDrawable, unit, checkableStateRes,
+                typeStrClickable ?: typeStr, solidColorClickable,
+                strokeWidthClickable, strokeColorClickable,
+                dashWidthClickable, dashGapClickable, radiusClickable)
+        //enabled状态
+        addStateDrawable(android.R.attr.state_enabled, "bg_enabled_",
+                stateListDrawable, unit, enabledStateRes,
+                typeStrEnabled ?: typeStr, solidColorEnabled,
+                strokeWidthEnabled, strokeColorEnabled,
+                dashWidthEnabled, dashGapEnabled, radiusEnabled)
+        //默认状态
+        addStateDrawable(0, "", stateListDrawable, unit,
+                defaultStateRes, typeStr, solidColor,
+                strokeWidth, strokeColor, dashWidth, dashGap, radius)
 
-    //focused状态
-    addStateDrawable(android.R.attr.state_focused, "focused_",
-            stateListDrawable, unit, backgroundFocused,
-            typeStrFocused ?: typeStr, solidColorFocused,
-            strokeWidthFocused, strokeColorFocused,
-            dashWidthFocused, dashGapFocused, radiusFocused)
-
-    //selected状态
-    addStateDrawable(android.R.attr.state_selected, "selected_",
-            stateListDrawable, unit, backgroundSelected,
-            typeStrSelected ?: typeStr, solidColorSelected,
-            strokeWidthSelected, strokeColorSelected,
-            dashWidthSelected, dashGapSelected, radiusSelected)
-
-    //checkable状态
-    addStateDrawable(android.R.attr.state_checkable, "checkable_",
-            stateListDrawable, unit, backgroundClickable,
-            typeStrClickable ?: typeStr, solidColorClickable,
-            strokeWidthClickable, strokeColorClickable,
-            dashWidthClickable, dashGapClickable, radiusClickable)
-
-    //enabled状态
-    addStateDrawable(android.R.attr.state_enabled, "enabled_",
-            stateListDrawable, unit, backgroundEnabled,
-            typeStrEnabled ?: typeStr, solidColorEnabled,
-            strokeWidthEnabled, strokeColorEnabled,
-            dashWidthEnabled, dashGapEnabled, radiusEnabled)
-
-    //默认状态
-    addStateDrawable(0, "", stateListDrawable, unit,
-            backgroundDrawable, typeStr, solidColor,
-            strokeWidth, strokeColor, dashWidth, dashGap, radius)
-
-    background = stateListDrawable
+        post { background = stateListDrawable }
+    }.start()
 }
 
 /**
@@ -272,7 +283,8 @@ private fun View.addStateDrawable(
         stateListDrawable: StateListDrawable,
 
         unit: String? = null,
-        drawable: Drawable? = null,
+        stateDrawableRes: Any? = null,
+
         typeStr: String? = null,
         solidColor: Int? = null,
         strokeWidth: Number? = null,
@@ -281,12 +293,15 @@ private fun View.addStateDrawable(
         dashGap: Number? = null,
         radius: Any? = null) {
 
-    if (drawable != null) {
-        stateListDrawable.addState(intArrayOf(state), drawable)
+    if (stateDrawableRes != null) {
+        Glide.with(this).load(stateDrawableRes).submit().get()?.run {
+            stateListDrawable.addState(intArrayOf(state), this)
+        }
     } else if (solidColor != null || (strokeWidth != null && strokeColor != null)) {
-        stateListDrawable.addState(intArrayOf(state), getBindShapeDrawable(
-                prefix, unit, typeStr, solidColor, strokeWidth,
-                strokeColor, dashWidth, dashGap, radius))
+        val shapeDrawable = getBindShapeDrawable(
+            prefix, unit, typeStr, solidColor, strokeWidth,
+            strokeColor, dashWidth, dashGap, radius)
+        stateListDrawable.addState(intArrayOf(state), shapeDrawable)
     }
 }
 
@@ -322,9 +337,9 @@ private fun View.getBindShapeDrawable(
         is Number -> radius.getUnitValue(unit)
         is List<*> -> {
             listOf((radius[0] as? Number).getUnitValue(unit),
-                (radius[1] as? Number).getUnitValue(unit),
-                (radius[2] as? Number).getUnitValue(unit),
-                (radius[3] as? Number).getUnitValue(unit))
+                    (radius[1] as? Number).getUnitValue(unit),
+                    (radius[2] as? Number).getUnitValue(unit),
+                    (radius[3] as? Number).getUnitValue(unit))
         }
         else -> radius
     }

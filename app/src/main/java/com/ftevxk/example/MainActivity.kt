@@ -12,8 +12,8 @@ import com.ftevxk.core.extension.*
 import com.ftevxk.core.widget.InterceptEditText
 import com.ftevxk.example.databinding.ActivityMainBinding
 import com.ftevxk.example.databinding.ItemMainBinding
-import com.pawegio.kandroid.alert
-import com.pawegio.kandroid.toast
+import org.jetbrains.anko.alert
+import org.jetbrains.anko.toast
 import kotlin.random.Random
 
 class MainActivity : AppCompatActivity() {
@@ -97,7 +97,7 @@ class MainActivity : AppCompatActivity() {
                 //右上角添加按钮弹框询问
                 alert("是否添加新数据?") {
                     val editText = getAddEditText()
-                    customView(editText)
+                    customView = editText
                     negativeButton("取消") {}
                     positiveButton("确定") {
                         if (editText.text.isEmpty()) {

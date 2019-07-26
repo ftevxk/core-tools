@@ -21,23 +21,25 @@
         android:gravity="center"
         android:padding="10dp">
 
-        <Button
+        <CheckBox
             android:id="@+id/button"
             android:layout_width="100dp"
             android:layout_height="40dp"
+            android:button="@null"
             android:gravity="center"
             android:text="@{model.title}"
             android:textColor="@android:color/white"
-            tools:pressed_shape_radius="@{Arrays.asList(30f, 30f, 0, 0)}"
-            tools:pressed_shape_solid_color="@{Color.BLUE}"
-            tools:pressed_shape_type="@{`rect`}"
-            tools:shape_dash_gap="@{5}"
-            tools:shape_dash_width="@{10}"
-            tools:shape_radius="@{30}"
-            tools:shape_solid_color="@{@color/colorPrimary}"
-            tools:shape_stroke_color="@{Color.BLUE}"
-            tools:shape_stroke_width="@{2}"
-            tools:shape_type="@{`rect`}"
+            tools:bg_checked_shape_radius="@{Arrays.asList(30f, 30f, 0, 0)}"
+            tools:bg_checked_shape_solid_color="@{Color.BLUE}"
+            tools:bg_checked_shape_type="@{`rect`}"
+            tools:bg_default_shape_dash_gap="@{5}"
+            tools:bg_default_shape_dash_width="@{10}"
+            tools:bg_default_shape_radius="@{30}"
+            tools:bg_default_shape_solid_color="@{@color/colorPrimary}"
+            tools:bg_default_shape_stroke_color="@{Color.BLUE}"
+            tools:bg_default_shape_stroke_width="@{2}"
+            tools:bg_default_shape_type="@{`rect`}"
+            tools:bg_pressed_state_res="@{@android:drawable/btn_default}"
             tools:unit="@{`dp`}" />
     </RelativeLayout>
 </layout>
