@@ -5,10 +5,10 @@ buildscript {
     ext.gradle_version = '3.4.2'
 
     repositories {
+        jcenter()
+        maven { url 'https://jitpack.io' }
         maven { url 'https://maven.aliyun.com/repository/google' }
         maven { url 'https://maven.aliyun.com/repository/central' }
-        maven { url 'https://maven.aliyun.com/repository/jcenter' }
-        maven { url 'https://jitpack.io' }
     }
     dependencies {
         classpath "com.android.tools.build:gradle:$gradle_version"
@@ -20,10 +20,10 @@ buildscript {
 
 allprojects {
     repositories {
+        jcenter()
+        maven { url 'https://jitpack.io' }
         maven { url 'https://maven.aliyun.com/repository/google' }
         maven { url 'https://maven.aliyun.com/repository/central' }
-        maven { url 'https://maven.aliyun.com/repository/jcenter' }
-        maven { url 'https://jitpack.io' }
     }
     tasks.withType(Javadoc).all {
         enabled = false

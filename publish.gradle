@@ -6,7 +6,7 @@ publish {
     userOrg = 'ftevxk'                                          //bintray注册的用户名
     groupId = 'com.ftevxk'                                      //compile引用时的第1部分groupId
     artifactId = 'core-tools'                                   //compile引用时的第2部分项目名
-    publishVersion = '1.0.5'                                    //compile引用时的第3部分版本号
+    publishVersion = '1.0.6'                                    //compile引用时的第3部分版本号
     desc = 'Kotlin + DataBinding Core Tools'                    //项目描述
     repoName = "android"                                        //你的仓库名称，没有填写默认仓库是maven
     website = 'https://github.com/ftevxk/core-tools'            //github 托管地址
