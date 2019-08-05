@@ -1,4 +1,4 @@
-@file:Suppress("unused")
+@file:Suppress("unused", "DEPRECATION")
 
 package com.ftevxk.core.extension
 
@@ -7,6 +7,7 @@ import android.content.ContextWrapper
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
+import android.text.Html
 import android.view.GestureDetector
 import android.view.View
 import android.view.ViewGroup
@@ -18,6 +19,8 @@ import androidx.core.view.GestureDetectorCompat
 import androidx.databinding.BindingAdapter
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import com.bumptech.glide.Glide
+import kotlin.concurrent.thread
 
 /**
  * 在XML布局里直接自定义drawable的宽高
@@ -31,6 +34,23 @@ fun TextView.customDrawableSize(width: Number, height: Number, unit: String? = n
     if (compoundDrawables[2] != null) compoundDrawables[2].setBounds(0, 0, drawWidth, drawHeight)
     if (compoundDrawables[3] != null) compoundDrawables[3].setBounds(0, 0, drawWidth, drawHeight)
     setCompoundDrawables(compoundDrawables[0], compoundDrawables[1], compoundDrawables[2], compoundDrawables[3])
+}
+
+/**
+ * TextView简单设置Html格式内容
+ */
+@BindingAdapter("tools:html")
+fun TextView.setSimpleHtml(html: String?) {
+    if (!html.isNullOrEmpty()) {
+        Html.fromHtml(html, Html.ImageGetter {
+            thread {
+                val drawable = Glide.with(this).load(it).submit().get()
+                drawable.setBounds(0, 0, drawable.intrinsicWidth, drawable.intrinsicHeight)
+                post { this.text = Html.fromHtml(html, Html.ImageGetter { drawable }, null) }
+            }
+            null
+        }, null)
+    }
 }
 
 /**

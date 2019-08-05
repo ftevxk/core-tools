@@ -8,6 +8,7 @@ import android.graphics.drawable.StateListDrawable
 import android.view.View
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
+import kotlin.concurrent.thread
 
 /**
  * Shape类型枚举
@@ -226,7 +227,7 @@ fun View.setShapeBackground(
         dashGapEnabled: Number? = null,
         radiusEnabled: Any? = null) {
 
-    Thread {
+    thread {
         val stateListDrawable = StateListDrawable()
 
         //pressed状态
@@ -271,7 +272,7 @@ fun View.setShapeBackground(
                 strokeWidth, strokeColor, dashWidth, dashGap, radius)
 
         post { background = stateListDrawable }
-    }.start()
+    }
 }
 
 /**
