@@ -1,6 +1,6 @@
 @file:Suppress("UNCHECKED_CAST", "MemberVisibilityCanBePrivate", "unused")
 
-package com.ftevxk.core.common
+package com.ftevxk.core.adapter
 
 import android.util.SparseIntArray
 import android.view.LayoutInflater
@@ -141,7 +141,7 @@ class DataBindAdapter : RecyclerView.Adapter<DataBindAdapter.ViewHolder>() {
             override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
                 val oldModel = getItemModels<T>()[oldItemPosition]
                 val newModel = newModels[newItemPosition]
-                return oldModel.itemModelInfo.diffId == newModel.itemModelInfo.diffId
+                return oldModel.bindItemModelInfo.diffId == newModel.bindItemModelInfo.diffId
             }
 
             //item内容是否相同
@@ -172,7 +172,7 @@ class DataBindAdapter : RecyclerView.Adapter<DataBindAdapter.ViewHolder>() {
         //判断类型是否为自定义ViewDataBinding
         val customPosition = customBindingPositions.get(viewType, -1)
         val binding = if (customPosition != -1) {
-            getItemModel<IDataBindItemModel>(customPosition)!!.itemModelInfo.customBinding!!
+            getItemModel<IDataBindItemModel>(customPosition)!!.bindItemModelInfo.customBinding!!
         } else {
             DataBindingUtil.inflate(LayoutInflater.from(parent.context), viewType, parent, false)
         }
@@ -184,11 +184,11 @@ class DataBindAdapter : RecyclerView.Adapter<DataBindAdapter.ViewHolder>() {
         bindAdapterListener?.onBindViewHolderBefore(holder, position)
         val model = getItemModels<IDataBindItemModel>()[position]
         //默认的VariableId绑定
-        if (model.itemModelInfo.variableId > 0) {
-            holder.binding.setVariable(model.itemModelInfo.variableId, model)
+        if (model.bindItemModelInfo.variableId > 0) {
+            holder.binding.setVariable(model.bindItemModelInfo.variableId, model)
         }
         //自定义的VariableId绑定
-        model.itemModelInfo.customData?.forEach {
+        model.bindItemModelInfo.customData?.forEach {
             holder.binding.setVariable(it.first, it.second)
         }
         bindAdapterListener?.onBindViewHolderAfter(holder, position, model)
@@ -202,7 +202,7 @@ class DataBindAdapter : RecyclerView.Adapter<DataBindAdapter.ViewHolder>() {
 
     override fun getItemViewType(position: Int): Int {
         //判断类型是否为自定义ViewDataBinding
-        val info = getItemModels<IDataBindItemModel>()[position].itemModelInfo
+        val info = getItemModels<IDataBindItemModel>()[position].bindItemModelInfo
         return if (info.customBinding != null) {
             val typeKey = info.customBinding!!.root.hashCode()
             //存储当前位置，创建ViewHolder使用

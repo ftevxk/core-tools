@@ -14,8 +14,8 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.ftevxk.core.common.DataBindAdapter
-import com.ftevxk.core.common.IDataBindItemModel
+import com.ftevxk.core.adapter.DataBindAdapter
+import com.ftevxk.core.adapter.IDataBindItemModel
 
 /*****************************************************************
  * 点击事件相关

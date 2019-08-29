@@ -1,7 +1,8 @@
 @file:Suppress("unused")
 
-package com.ftevxk.core.common
+package com.ftevxk.core.adapter
 
+import android.view.View
 import androidx.annotation.LayoutRes
 import androidx.databinding.ViewDataBinding
 
@@ -14,7 +15,7 @@ interface IDataBindItemModel {
     /**
      * 设置layoutRes、variableId等信息
      */
-    val itemModelInfo: BindItemModelInfo
+    val bindItemModelInfo: BindItemModelInfo
 
     /**
      * 相同内容，可供adapter数据差异对比
@@ -24,14 +25,30 @@ interface IDataBindItemModel {
 }
 
 /*********************************
- * 扩展重置BindItemModelInfo信息
+ * BindItemModelInfo
  *********************************/
+
+/**
+ * DataBindAdapter操作的Item信息类
+ * @param layoutRes         item布局
+ * @param variableId        View对应绑定默认ViewModel的id，BR文件类似R文件由系统统一维护, 格式: 包名+BR+id
+ * @param diffId            判断是否为同一条item的差异id, 可用View.generateViewId()保证唯一
+ * @param customBinding     传入自定义的ViewDataBinding，跳过layoutRes
+ * @param customData        自定义额外的VariableId绑定
+ */
+data class BindItemModelInfo(
+        @LayoutRes var layoutRes: Int,
+        var variableId: Int,
+        var diffId: Int = View.generateViewId(),
+        var customBinding: ViewDataBinding? = null,
+        var customData: List<Pair<Int, Any>>? = null
+)
 
 /**
  * 重置item布局
  */
 fun <T : IDataBindItemModel> T.resetLayoutRes(@LayoutRes layoutRes: Int): T {
-    itemModelInfo.layoutRes = layoutRes
+    bindItemModelInfo.layoutRes = layoutRes
     return this
 }
 
@@ -39,7 +56,7 @@ fun <T : IDataBindItemModel> T.resetLayoutRes(@LayoutRes layoutRes: Int): T {
  * 重置View对应绑定默认ViewModel的id
  */
 fun <T : IDataBindItemModel> T.resetVariableId(variableId: Int): T {
-    itemModelInfo.variableId = variableId
+    bindItemModelInfo.variableId = variableId
     return this
 }
 
@@ -47,7 +64,7 @@ fun <T : IDataBindItemModel> T.resetVariableId(variableId: Int): T {
  * 重置是否为同一条item的差异id
  */
 fun <T : IDataBindItemModel> T.resetDiffId(diffId: Int): T {
-    itemModelInfo.diffId = diffId
+    bindItemModelInfo.diffId = diffId
     return this
 }
 
@@ -55,7 +72,7 @@ fun <T : IDataBindItemModel> T.resetDiffId(diffId: Int): T {
  * 添加额外的VariableId绑定
  */
 fun <T : IDataBindItemModel> T.addCustomData(vararg pairs: Pair<Int, Any>): T {
-    itemModelInfo.customData = pairs.asList()
+    bindItemModelInfo.customData = pairs.asList()
     return this
 }
 
@@ -63,6 +80,6 @@ fun <T : IDataBindItemModel> T.addCustomData(vararg pairs: Pair<Int, Any>): T {
  * 设置自定义ViewDataBinding
  */
 fun <T : IDataBindItemModel, VDB : ViewDataBinding> T.setCustomBinding(customBinding: VDB): T {
-    itemModelInfo.customBinding = customBinding
+    bindItemModelInfo.customBinding = customBinding
     return this
 }
