@@ -34,7 +34,7 @@ implementation 'com.github.bumptech.glide:glide:4.9.0'
 * [Kotlin 的一些实用小技巧](https://www.jianshu.com/p/b8220a278fb0)
 
 #### 2.DataBinding
-* [Android DataBinding 实战全解](https://www.jianshu.com/p/0fe0b6b7dae1)
+* [Android DataBinding 让数据和布局绑定在一起](https://li-xyz.com/index.php/archives/2394/)
 * [Android Databinding 使用全面总结](https://www.jianshu.com/p/572822d9eff9)
 * [Android DataBinding 从入门到进阶](https://www.jianshu.com/p/bd9016418af2)
 
