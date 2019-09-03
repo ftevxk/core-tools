@@ -9,6 +9,14 @@ import androidx.fragment.app.FragmentActivity
 import com.ftevxk.core.fragment.ResultFragment
 import org.jetbrains.anko.internals.AnkoInternals
 
+fun FragmentActivity.startActivityForResult(intent: Intent, result: (Intent?) -> Unit){
+    val fragment = ResultFragment(intent){ fragment, it ->
+        result.invoke(it)
+        supportFragmentManager.beginTransaction().remove(fragment).commitAllowingStateLoss()
+    }
+    supportFragmentManager.beginTransaction().add(0, fragment).commitAllowingStateLoss()
+}
+
 inline fun <reified T: Activity> FragmentActivity.startActivityForResult(vararg params: Pair<String, Any?>, noinline result: (Intent?) -> Unit){
     val intent = AnkoInternals.createIntent(this, T::class.java, params)
     val fragment = ResultFragment(intent){ fragment, it ->
