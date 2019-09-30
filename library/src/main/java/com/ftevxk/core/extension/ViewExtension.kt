@@ -20,6 +20,7 @@ import androidx.databinding.BindingAdapter
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.bumptech.glide.Glide
+import org.jetbrains.anko.firstChildOrNull
 import kotlin.concurrent.thread
 
 /**
@@ -116,6 +117,39 @@ fun View.translateBitmap(result: (Bitmap) -> Unit, transparent: Boolean = true) 
 }
 
 /**
+ * 添加addOnGlobalLayoutListener监听
+ */
+inline fun <T : View> T.afterMeasured(crossinline f: T.() -> Unit) {
+    viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
+        override fun onGlobalLayout() {
+            if (measuredWidth > 0 && measuredHeight > 0) {
+                viewTreeObserver.removeOnGlobalLayoutListener(this)
+                f()
+            }
+        }
+    })
+}
+
+/**
+ * 重置View的大小
+ */
+fun View.resize(width: Int? = null, height: Int? = null) {
+    val lp = layoutParams
+    lp?.let {
+        lp.width = width ?: lp.width
+        lp.height = height ?: lp.height
+        layoutParams = lp
+    }
+}
+
+/**
+ * 查找第一个符合类型的子child
+ */
+inline fun <reified V : View> ViewGroup.findFirstChild(): V? {
+    return this.firstChildOrNull { return@firstChildOrNull it is V } as? V
+}
+
+/**
  * 通过View找到所属FragmentActivity
  */
 fun View.findActivity(): FragmentActivity? {
@@ -171,31 +205,5 @@ private fun putViewWithFragmentMaps(fragments: List<Fragment>?, maps: MutableMap
             maps[it.view!!] = it
             putViewWithFragmentMaps(it.childFragmentManager.fragments, maps)
         }
-    }
-}
-
-/**
- * 添加addOnGlobalLayoutListener监听
- */
-inline fun <T : View> T.afterMeasured(crossinline f: T.() -> Unit) {
-    viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
-        override fun onGlobalLayout() {
-            if (measuredWidth > 0 && measuredHeight > 0) {
-                viewTreeObserver.removeOnGlobalLayoutListener(this)
-                f()
-            }
-        }
-    })
-}
-
-/**
- * 重置View的大小
- */
-fun View.resize(width: Int? = null, height: Int? = null) {
-    val lp = layoutParams
-    lp?.let {
-        lp.width = width ?: lp.width
-        lp.height = height ?: lp.height
-        layoutParams = lp
     }
 }
