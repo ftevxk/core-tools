@@ -58,11 +58,16 @@ fun ViewPager.getXmlTabItemTexts(): List<CharSequence?>?{
     }
 }
 
+
+@BindingAdapter("tools:bind_bottom_navigation")
+fun ViewPager.bindBottomNavigationView(bottomNavigationView: BottomNavigationView){
+    bindBottomNavigationView(bottomNavigationView, false)
+}
+
 /**
  * ViewPager绑定联动BottomNavigationView
  */
-@BindingAdapter("tools:bind_bottom_navigation")
-fun ViewPager.bindBottomNavigationView(bottomNavigationView: BottomNavigationView){
+fun ViewPager.bindBottomNavigationView(bottomNavigationView: BottomNavigationView, smoothScroll: Boolean){
     val arrays = SparseIntArray()
     for (i in 0 until bottomNavigationView.menu.size()){
         arrays.put(i, bottomNavigationView.menu.getItem(i).itemId)
@@ -71,7 +76,7 @@ fun ViewPager.bindBottomNavigationView(bottomNavigationView: BottomNavigationVie
     bottomNavigationView.setOnNavigationItemSelectedListener {
         val index = arrays.indexOfValue(it.itemId)
         if (index >= 0){
-            this.setCurrentItem(arrays.keyAt(index), false)
+            this.setCurrentItem(arrays.keyAt(index), smoothScroll)
             return@setOnNavigationItemSelectedListener true
         }else{
             return@setOnNavigationItemSelectedListener false
