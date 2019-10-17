@@ -57,6 +57,7 @@ class DataBindAdapter : RecyclerView.Adapter<DataBindAdapter.ViewHolder>() {
             if (position in 0 until getItemModels<T>().size) {
                 getItemModels<T>().add(position, model)
                 notifyItemInserted(position)
+                notifyItemRangeChanged(position, itemCount - position)
             } else {
                 getItemModels<T>().add(model)
                 notifyItemInserted(itemCount)
@@ -85,6 +86,7 @@ class DataBindAdapter : RecyclerView.Adapter<DataBindAdapter.ViewHolder>() {
             val index = indexOf(model)
             removeAt(index)
             notifyItemRemoved(index)
+            notifyItemRangeChanged(index, itemCount - index)
             //移除itemModel通知回调
             bindAdapterListener?.onNotifyChange(tempModels, getItemModels())
             return index
@@ -102,6 +104,7 @@ class DataBindAdapter : RecyclerView.Adapter<DataBindAdapter.ViewHolder>() {
         //移除操作
         val model = getItemModels<IDataBindItemModel>().removeAt(index)
         notifyItemRemoved(index)
+        notifyItemRangeChanged(index, itemCount - index)
         //移除itemModel通知回调
         bindAdapterListener?.onNotifyChange(tempModels, getItemModels())
         return model
