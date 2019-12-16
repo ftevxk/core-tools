@@ -7,7 +7,7 @@ apply plugin: 'kotlin-kapt'
 apply from: "../publish.gradle"
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 29
 
     defaultConfig {
         minSdkVersion 19
@@ -32,6 +32,6 @@ dependencies {
     api fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
     api 'org.jetbrains.anko:anko:0.10.8'
 
-    compileOnly 'com.github.bumptech.glide:glide:4.9.0'
+    compileOnly 'com.github.bumptech.glide:glide:4.10.0'
     compileOnly 'com.google.android.material:material:1.0.0'
 }
