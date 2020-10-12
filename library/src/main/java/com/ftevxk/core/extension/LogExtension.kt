@@ -21,16 +21,22 @@ object LogExtension {
         if (stackTraceElements == null) {
             var isCurrent = false
             val elements = Thread.currentThread().stackTrace
-            if (stackTraceIndex > 0) {
-                val stackTrace = elements[stackTraceIndex]
-                return "${stackTrace.methodName}(${stackTrace.fileName}:${stackTrace.lineNumber})"
-            } else {
-                elements.forEachIndexed { index, stackTrace ->
-                    if (isCurrent && !stackTrace.fileName.startsWith(javaClass.simpleName)) {
-                        stackTraceIndex = index
+            if (elements.isNotEmpty()) {
+                if (stackTraceIndex > 0) {
+                    val stackTrace = elements[stackTraceIndex]
+                    if (stackTrace != null && stackTrace.fileName != null) {
                         return "${stackTrace.methodName}(${stackTrace.fileName}:${stackTrace.lineNumber})"
-                    } else {
-                        if (stackTrace.fileName.startsWith(javaClass.simpleName)) isCurrent = true
+                    }
+                } else {
+                    elements.forEachIndexed { index, stackTrace ->
+                        if (stackTrace != null && stackTrace.fileName != null) {
+                            if (isCurrent && !stackTrace.fileName.startsWith(javaClass.simpleName)) {
+                                stackTraceIndex = index
+                                return "${stackTrace.methodName}(${stackTrace.fileName}:${stackTrace.lineNumber})"
+                            } else {
+                                if (stackTrace.fileName.startsWith(javaClass.simpleName)) isCurrent = true
+                            }
+                        }
                     }
                 }
             }
@@ -43,7 +49,7 @@ object LogExtension {
                 } else {
                     if (lineInfo.first != stackTrace.fileName) {
                         lineInfo = Pair(stackTrace.fileName,
-                            "${stackTrace.methodName}(${stackTrace.fileName}:${stackTrace.lineNumber})")
+                                "${stackTrace.methodName}(${stackTrace.fileName}:${stackTrace.lineNumber})")
                     }
                 }
             }

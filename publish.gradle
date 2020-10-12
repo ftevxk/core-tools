@@ -1,14 +1,14 @@
 /**
- * https://juejin.im/post/59cef9baf265da066a105f92
+ * https://github.com/panpf/bintray-publish
  */
 
-apply plugin: 'com.novoda.bintray-release'
+apply plugin: 'com.github.panpf.bintray-publish'
 
 publish {
     userOrg = 'ftevxk'                                          //bintray注册的用户名
     groupId = 'com.ftevxk'                                      //compile引用时的第1部分groupId
     artifactId = 'core-tools'                                   //compile引用时的第2部分项目名
-    publishVersion = '1.1.0'                                    //compile引用时的第3部分版本号
+    publishVersion = '1.2.0'                                    //compile引用时的第3部分版本号
     desc = 'Kotlin + DataBinding Core Tools'                    //项目描述
     repoName = "android"                                        //你的仓库名称，没有填写默认仓库是maven
     website = 'https://github.com/ftevxk/core-tools'            //github 托管地址

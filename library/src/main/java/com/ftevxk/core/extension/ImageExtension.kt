@@ -1,6 +1,7 @@
 package com.ftevxk.core.extension
 
 import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.widget.ImageView
 import androidx.annotation.DrawableRes
@@ -19,10 +20,10 @@ import com.bumptech.glide.request.transition.Transition
  * transform和circle仅有一个，优先transform
  * @param res 任意图片资源
  */
-@BindingAdapter(value = ["tools:res", "tools:tint", "tools:placeholder", "tools:error",
-    "tools:transform", "tools:circle", "tools:thumbnail"], requireAll = false)
+@BindingAdapter(value = ["res", "tint", "placeholder", "error",
+    "asBitmap", "transform", "circle", "thumbnail"], requireAll = false)
 fun ImageView.load(res: Any?, tint: Int? = null, placeholder: Any? = null, error: Any? = null,
-                   transform: Transformation<Bitmap>? = null,
+                   asBitmap: Boolean = false, transform: Transformation<Bitmap>? = null,
                    circle: Boolean = false, thumbnail: Float = 0f) {
     this.load(res, {
         var options = RequestOptions()
@@ -40,28 +41,53 @@ fun ImageView.load(res: Any?, tint: Int? = null, placeholder: Any? = null, error
             options = options.circleCrop()
         }
         options
-    }, tint, thumbnail)
+    }, tint, asBitmap, thumbnail)
 }
 
 /**
  * 自定义RequestOptions的图片加载
  */
-fun ImageView.load(res: Any?, options: () -> RequestOptions?, tint: Int? = null, thumbnail: Float = 0f) {
-    Glide.with(this).load(res).apply(options.invoke() ?: RequestOptions())
-            .thumbnail(thumbnail).into(object : CustomViewTarget<ImageView, Drawable>(this) {
+fun ImageView.load(res: Any?, options: () -> RequestOptions?, tint: Int? = null, asBitmap: Boolean = false, thumbnail: Float = 0f) {
+    if (asBitmap) {
+        Glide.with(this).asBitmap().load(res).apply(options.invoke() ?: RequestOptions())
+                .thumbnail(thumbnail).into(object : CustomViewTarget<ImageView, Bitmap>(this) {
 
-            override fun onLoadFailed(errorDrawable: Drawable?) {
-                    this@load.setImageDrawable(errorDrawable)
-                }
+                    override fun onLoadFailed(errorDrawable: Drawable?) {
+                        this@load.setImageDrawable(errorDrawable)
+                    }
 
-                override fun onResourceCleared(placeholder: Drawable?) {
-                    this@load.setImageDrawable(placeholder)
-                }
+                    override fun onResourceCleared(placeholder: Drawable?) {
+                        this@load.setImageDrawable(placeholder)
+                    }
 
-                override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
-                    val drawable = resource.mutate()
-                    tint?.run { DrawableCompat.setTint(drawable, this) }
-                    this@load.setImageDrawable(drawable)
-                }
-            })
+                    override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                        val drawable = BitmapDrawable(this@load.resources, resource)
+                        tint?.run { DrawableCompat.setTint(drawable, this) }
+                        this@load.setImageDrawable(drawable)
+                    }
+                })
+    } else {
+        if (tint != null) {
+            Glide.with(this).load(res).apply(options.invoke() ?: RequestOptions())
+                    .thumbnail(thumbnail).into(object : CustomViewTarget<ImageView, Drawable>(this) {
+
+                        override fun onLoadFailed(errorDrawable: Drawable?) {
+                            this@load.setImageDrawable(errorDrawable)
+                        }
+
+                        override fun onResourceCleared(placeholder: Drawable?) {
+                            this@load.setImageDrawable(placeholder)
+                        }
+
+                        override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
+                            val drawable = resource.mutate()
+                            tint.run { DrawableCompat.setTint(drawable, this) }
+                            this@load.setImageDrawable(drawable)
+                        }
+                    })
+        } else {
+            Glide.with(this).load(res).apply(options.invoke() ?: RequestOptions())
+                    .thumbnail(thumbnail).into(this)
+        }
+    }
 }

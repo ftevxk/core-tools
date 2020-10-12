@@ -7,13 +7,14 @@ apply plugin: 'kotlin-kapt'
 apply from: "../publish.gradle"
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion TARGET_SDK_VERSION.toInteger()
 
     defaultConfig {
-        minSdkVersion 19
+        minSdkVersion MIN_SDK_VERSION.toInteger()
     }
 
     buildTypes {
+        pre{}
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
@@ -25,7 +26,9 @@ android {
     }
 
     //开启DataBinding
-    dataBinding { enabled = true }
+    buildFeatures{
+        dataBinding = true
+    }
 }
 
 dependencies {
@@ -33,5 +36,5 @@ dependencies {
     api 'org.jetbrains.anko:anko:0.10.8'
 
     compileOnly 'com.github.bumptech.glide:glide:4.10.0'
-    compileOnly 'com.google.android.material:material:1.0.0'
+    compileOnly 'com.google.android.material:material:1.2.1'
 }
