@@ -59,7 +59,7 @@ private fun <T : Number> transformUnitValue(value: Float, type: T): T {
         is Int -> value.toInt() as T
         is Double -> value.toDouble() as T
         is Long -> value.toLong() as T
-        is Short -> value.toShort() as T
+        is Short -> value.toInt().toShort() as T
         else -> value as T
     }
 }

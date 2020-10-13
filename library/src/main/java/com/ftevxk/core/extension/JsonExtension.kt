@@ -53,8 +53,7 @@ fun <T> JSONObject.toMutableMap(isFloat: Boolean = false): MutableMap<String, T>
 fun String.toJsonPrint(): String {
     var level = 0
     val jsonForMatStr = StringBuffer()
-    for (i in 0 until this.length) {
-        val c = this[i]
+    for (element in this) {
         if (level > 0 && '\n' == jsonForMatStr[jsonForMatStr.length - 1]) {
             val levelStr = StringBuffer()
             for (levelI in 0 until level) {
@@ -62,12 +61,12 @@ fun String.toJsonPrint(): String {
             }
             jsonForMatStr.append(levelStr.toString())
         }
-        when (c) {
+        when (element) {
             '{', '[' -> {
-                jsonForMatStr.append(c + "\n")
+                jsonForMatStr.append(element + "\n")
                 level++
             }
-            ',' -> jsonForMatStr.append(c + "\n")
+            ',' -> jsonForMatStr.append(element + "\n")
             '}', ']' -> {
                 jsonForMatStr.append("\n")
                 level--
@@ -76,9 +75,9 @@ fun String.toJsonPrint(): String {
                     levelStr.append("\t")
                 }
                 jsonForMatStr.append(levelStr.toString())
-                jsonForMatStr.append(c)
+                jsonForMatStr.append(element)
             }
-            else -> jsonForMatStr.append(c)
+            else -> jsonForMatStr.append(element)
         }
     }
     return jsonForMatStr.toString()

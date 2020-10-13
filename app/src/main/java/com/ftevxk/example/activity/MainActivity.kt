@@ -1,4 +1,4 @@
-package com.ftevxk.example
+package com.ftevxk.example.activity
 
 import android.os.Bundle
 import android.view.Menu
@@ -10,19 +10,17 @@ import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import com.ftevxk.core.extension.*
 import com.ftevxk.core.widget.InterceptEditText
+import com.ftevxk.example.base.BaseBindActivity
+import com.ftevxk.example.viewmodel.MainItemModel
 import com.ftevxk.example.databinding.ActivityMainBinding
 import com.ftevxk.example.databinding.ItemMainBinding
 import org.jetbrains.anko.alert
 import org.jetbrains.anko.toast
 import kotlin.random.Random
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseBindActivity<ActivityMainBinding>() {
 
     private val menuId = View.generateViewId()
-
-    private val binding by lazy {
-        ActivityMainBinding.inflate(layoutInflater)
-    }
 
     private val models by lazy {
         mutableListOf<MainItemModel>()

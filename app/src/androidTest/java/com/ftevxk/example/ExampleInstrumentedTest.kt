@@ -5,6 +5,7 @@ import com.ftevxk.core.extension.dLog
 import com.ftevxk.core.extension.getSpValue
 import com.ftevxk.core.extension.putSpValue
 import com.ftevxk.core.extension.removeSpKey
+import com.ftevxk.example.activity.MainActivity
 import org.junit.Rule
 import org.junit.Test
 

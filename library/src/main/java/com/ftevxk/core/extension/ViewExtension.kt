@@ -2,6 +2,7 @@
 
 package com.ftevxk.core.extension
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.ContextWrapper
 import android.graphics.Bitmap
@@ -26,7 +27,7 @@ import kotlin.concurrent.thread
 /**
  * 在XML布局里直接自定义drawable的宽高
  */
-@BindingAdapter(value = ["tools:drawable_width", "tools:drawable_height", "tools:unit"], requireAll = false)
+@BindingAdapter(value = ["drawable_width", "drawable_height", "unit"], requireAll = false)
 fun TextView.customDrawableSize(width: Number, height: Number, unit: String? = null) {
     val drawWidth = width.getUnitValue(unit).toInt()
     val drawHeight = height.getUnitValue(unit).toInt()
@@ -40,14 +41,14 @@ fun TextView.customDrawableSize(width: Number, height: Number, unit: String? = n
 /**
  * TextView简单设置Html格式内容
  */
-@BindingAdapter("tools:html")
+@BindingAdapter("html")
 fun TextView.setSimpleHtml(html: String?) {
     if (!html.isNullOrEmpty()) {
-        Html.fromHtml(html, Html.ImageGetter {
+        Html.fromHtml(html, {
             thread {
                 val drawable = Glide.with(this).load(it).submit().get()
                 drawable.setBounds(0, 0, drawable.intrinsicWidth, drawable.intrinsicHeight)
-                post { this.text = Html.fromHtml(html, Html.ImageGetter { drawable }, null) }
+                post { this.text = Html.fromHtml(html, { drawable }, null) }
             }
             null
         }, null)
@@ -74,6 +75,7 @@ fun EditText.inputState(showInput: Boolean) {
 /**
  * 控件手势监听
  */
+@SuppressLint("ClickableViewAccessibility")
 fun View.addGesture(listener: GestureDetector.SimpleOnGestureListener) {
     val detector = GestureDetectorCompat(this.context, listener)
     this.setOnTouchListener { _, event ->

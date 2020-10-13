@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
 
     <LinearLayout
@@ -11,11 +10,11 @@
         android:orientation="vertical">
 
         <ImageView
+            circle="@{true}"
+            res="@{`https://kotlinlang.org/assets/images/favicon.ico`}"
             android:layout_width="64dp"
             android:layout_height="64dp"
-            android:layout_margin="10dp"
-            tools:circle="@{true}"
-            tools:res="@{`https://kotlinlang.org/assets/images/favicon.ico`}" />
+            android:layout_margin="10dp" />
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -23,12 +22,12 @@
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler"
+                empty_view="@{emptyView}"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@android:color/white"
                 app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-                app:spanCount="2"
-                tools:empty_view="@{emptyView}" />
+                app:spanCount="2" />
 
             <include
                 android:id="@+id/empty_view"

@@ -181,7 +181,7 @@ fun RecyclerView.buildSimpleBindAdapter(divider: Boolean = true) {
 /**
  * XML布局绑定DataBindAdapter
  */
-@BindingAdapter("tools:bind_data_adapter")
+@BindingAdapter("bind_data_adapter")
 fun RecyclerView.bindDataAdapter(bindDataAdapter: Boolean) {
     if (bindDataAdapter) {
         this.adapter = DataBindAdapter()
@@ -191,7 +191,7 @@ fun RecyclerView.bindDataAdapter(bindDataAdapter: Boolean) {
 /**
  * 设置DataBindAdapter绑定空数据页面，自动根据Item数量处理空数据页面显示隐藏
  */
-@BindingAdapter("tools:empty_view")
+@BindingAdapter("empty_view")
 fun RecyclerView.bindEmptyView(emptyView: View) {
     getDataBindAdapter()?.bindAdapterListener = object : DataBindAdapter.BindAdapterListener {
         override fun onNotifyChange(oldModels: MutableList<IDataBindItemModel>,

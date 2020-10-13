@@ -67,7 +67,7 @@ android {
     }
 
     //开启DataBinding
-    buildFeatures{
+    buildFeatures {
         dataBinding = true
     }
 

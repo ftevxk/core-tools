@@ -77,23 +77,23 @@ editText.setInterceptListener(object : InterceptEditText.InterceptListener {
 
 ```xml
 <ImageView
+    circle="@{true}"
+    res="@{`https://kotlinlang.org/assets/images/favicon.ico`}"
     android:layout_width="64dp"
     android:layout_height="64dp"
-    android:layout_margin="10dp"
-    tools:circle="@{true}"
-    tools:res="@{`https://kotlinlang.org/assets/images/favicon.ico`}" />
+    android:layout_margin="10dp"/>
 ```
 
 ### 5.ShapeExtension用法(设置为30dp的圆角矩形蓝色背景):
 
 ```xml
 <TextView
+    bg_default_shape_radius="@{30}"
+    bg_default_shape_solid_color="@{Color.BLUE}"
+    bg_default_shape_type="@{`rect`}"
+    unit="@{`dp`}"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    tools:bg_default_shape_radius="@{30}"
-    tools:bg_default_shape_solid_color="@{Color.BLUE}"
-    tools:bg_default_shape_type="@{`rect`}"
-    tools:unit="@{`dp`}"/>
+    android:layout_height="wrap_content"/>
 ```
 
 ### 6.DataBindAdapter用法:

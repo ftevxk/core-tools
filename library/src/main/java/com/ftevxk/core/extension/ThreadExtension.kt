@@ -1,6 +1,7 @@
 package com.ftevxk.core.extension
 
 import android.os.Handler
+import android.os.Looper
 import androidx.databinding.ObservableBoolean
 
 /**
@@ -8,7 +9,7 @@ import androidx.databinding.ObservableBoolean
  * @return 调用 ObservableBoolean.set(true) 可取消当前延迟任务
  */
 fun runDelayed(delayMillis: Long, run: () -> Unit): ObservableBoolean {
-    var handler: Handler? = Handler()
+    var handler: Handler? = Handler(Looper.getMainLooper())
     val runnable = Runnable {
         run.invoke()
         handler = null

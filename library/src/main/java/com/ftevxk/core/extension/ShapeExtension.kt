@@ -75,91 +75,91 @@ object ShapeExtension {
 
 /**
  * Shape背景扩展设置
- * tools:unit="@{`dp`}" 单位类型设置 ==> px; dp; sp; pt; in; mm; 默认不设置为dp单位
- * tools:bg_shape_type="@{`rect`}" Shape类型设置 ==> 矩形: rect; 椭圆形: oval; 线形: line; 环形: ring
- * tools:bg_shape_radius="@{30}" 设置四周相同角度
- * tools:bg_shape_radius="@{Arrays.asList(30, 30, 30, 30)}" 设置左上、右上、左下、右下的角度，需要引包 <import type="java.util.Arrays" />
+ * unit="@{`dp`}" 单位类型设置 ==> px; dp; sp; pt; in; mm; 默认不设置为dp单位
+ * bg_shape_type="@{`rect`}" Shape类型设置 ==> 矩形: rect; 椭圆形: oval; 线形: line; 环形: ring
+ * bg_shape_radius="@{30}" 设置四周相同角度
+ * bg_shape_radius="@{Arrays.asList(30, 30, 30, 30)}" 设置左上、右上、左下、右下的角度，需要引包 <import type="java.util.Arrays" />
  * 其余参照Shape用法，可设置pressed、checked、focused、selected、clickable、enabled等状态
- * 通过tools:bg_(状态)_state_res设置本地图片资源
+ * 通过bg_(状态)_state_res设置本地图片资源
  */
 @BindingAdapter(value = [
-    "tools:unit",
+    "unit",
     //默认状态资源
-    "tools:bg_default_state_res",
+    "bg_default_state_res",
     //默认状态自定义Shape
-    "tools:bg_default_shape_type",
-    "tools:bg_default_shape_solid_color",
-    "tools:bg_default_shape_stroke_width",
-    "tools:bg_default_shape_stroke_color",
-    "tools:bg_default_shape_dash_width",
-    "tools:bg_default_shape_dash_gap",
-    "tools:bg_default_shape_radius",
+    "bg_default_shape_type",
+    "bg_default_shape_solid_color",
+    "bg_default_shape_stroke_width",
+    "bg_default_shape_stroke_color",
+    "bg_default_shape_dash_width",
+    "bg_default_shape_dash_gap",
+    "bg_default_shape_radius",
 
     //pressed状态资源
-    "tools:bg_pressed_state_res",
+    "bg_pressed_state_res",
     //pressed状态自定义Shape
-    "tools:bg_pressed_shape_type",
-    "tools:bg_pressed_shape_solid_color",
-    "tools:bg_pressed_shape_stroke_width",
-    "tools:bg_pressed_shape_stroke_color",
-    "tools:bg_pressed_shape_dash_width",
-    "tools:bg_pressed_shape_dash_gap",
-    "tools:bg_pressed_shape_radius",
+    "bg_pressed_shape_type",
+    "bg_pressed_shape_solid_color",
+    "bg_pressed_shape_stroke_width",
+    "bg_pressed_shape_stroke_color",
+    "bg_pressed_shape_dash_width",
+    "bg_pressed_shape_dash_gap",
+    "bg_pressed_shape_radius",
 
     //checked状态资源
-    "tools:bg_checked_state_res",
+    "bg_checked_state_res",
     //checked状态自定义Shape
-    "tools:bg_checked_shape_type",
-    "tools:bg_checked_shape_solid_color",
-    "tools:bg_checked_shape_stroke_width",
-    "tools:bg_checked_shape_stroke_color",
-    "tools:bg_checked_shape_dash_width",
-    "tools:bg_checked_shape_dash_gap",
-    "tools:bg_checked_shape_radius",
+    "bg_checked_shape_type",
+    "bg_checked_shape_solid_color",
+    "bg_checked_shape_stroke_width",
+    "bg_checked_shape_stroke_color",
+    "bg_checked_shape_dash_width",
+    "bg_checked_shape_dash_gap",
+    "bg_checked_shape_radius",
 
     //focused状态资源
-    "tools:bg_focused_state_res",
+    "bg_focused_state_res",
     //focused状态自定义Shape
-    "tools:bg_focused_shape_type",
-    "tools:bg_focused_shape_solid_color",
-    "tools:bg_focused_shape_stroke_width",
-    "tools:bg_focused_shape_stroke_color",
-    "tools:bg_focused_shape_dash_width",
-    "tools:bg_focused_shape_dash_gap",
-    "tools:bg_focused_shape_radius",
+    "bg_focused_shape_type",
+    "bg_focused_shape_solid_color",
+    "bg_focused_shape_stroke_width",
+    "bg_focused_shape_stroke_color",
+    "bg_focused_shape_dash_width",
+    "bg_focused_shape_dash_gap",
+    "bg_focused_shape_radius",
 
     //selected状态资源
-    "tools:bg_selected_state_res",
+    "bg_selected_state_res",
     //selected状态自定义Shape
-    "tools:bg_selected_shape_type",
-    "tools:bg_selected_shape_solid_color",
-    "tools:bg_selected_shape_stroke_width",
-    "tools:bg_selected_shape_stroke_color",
-    "tools:bg_selected_shape_dash_width",
-    "tools:bg_selected_shape_dash_gap",
-    "tools:bg_selected_shape_radius",
+    "bg_selected_shape_type",
+    "bg_selected_shape_solid_color",
+    "bg_selected_shape_stroke_width",
+    "bg_selected_shape_stroke_color",
+    "bg_selected_shape_dash_width",
+    "bg_selected_shape_dash_gap",
+    "bg_selected_shape_radius",
 
     //checkable状态资源
-    "tools:bg_checkable_state_res",
+    "bg_checkable_state_res",
     //checkable状态自定义Shape
-    "tools:bg_checkable_shape_type",
-    "tools:bg_checkable_shape_solid_color",
-    "tools:bg_checkable_shape_stroke_width",
-    "tools:bg_checkable_shape_stroke_color",
-    "tools:bg_checkable_shape_dash_width",
-    "tools:bg_checkable_shape_dash_gap",
-    "tools:bg_checkable_shape_radius",
+    "bg_checkable_shape_type",
+    "bg_checkable_shape_solid_color",
+    "bg_checkable_shape_stroke_width",
+    "bg_checkable_shape_stroke_color",
+    "bg_checkable_shape_dash_width",
+    "bg_checkable_shape_dash_gap",
+    "bg_checkable_shape_radius",
 
     //enabled状态资源
-    "tools:bg_enabled_state_res",
+    "bg_enabled_state_res",
     //enabled状态自定义Shape
-    "tools:bg_enabled_shape_type",
-    "tools:bg_enabled_shape_solid_color",
-    "tools:bg_enabled_shape_stroke_width",
-    "tools:bg_enabled_shape_stroke_color",
-    "tools:bg_enabled_shape_dash_width",
-    "tools:bg_enabled_shape_dash_gap",
-    "tools:bg_enabled_shape_radius"
+    "bg_enabled_shape_type",
+    "bg_enabled_shape_solid_color",
+    "bg_enabled_shape_stroke_width",
+    "bg_enabled_shape_stroke_color",
+    "bg_enabled_shape_dash_width",
+    "bg_enabled_shape_dash_gap",
+    "bg_enabled_shape_radius"
 ], requireAll = false)
 fun View.setShapeBackground(
         unit: String? = null,
@@ -326,10 +326,10 @@ private fun View.getBindShapeDrawable(
         "line" -> ShapeType.LINE
         "ring" -> ShapeType.RING
         else -> throw Throwable("未设置Shape类型，需要添加:\n" +
-                "\t\t\t\t矩形 => \n\t\t\t\ttools:${prefix}shape_type=\"@{`rect`}\"\n" +
-                "\t\t\t\t椭圆形 => \n\t\t\t\ttools:${prefix}shape_type=\"@{`oval`}\"\n" +
-                "\t\t\t\t线形 => \n\t\t\t\ttools:${prefix}shape_type=\"@{`line`}\"\n" +
-                "\t\t\t\t环形 => \n\t\t\t\ttools:${prefix}shape_type=\"@{`ring`}\"\n"
+                "\t\t\t\t矩形 => \n\t\t\t\t${prefix}shape_type=\"@{`rect`}\"\n" +
+                "\t\t\t\t椭圆形 => \n\t\t\t\t${prefix}shape_type=\"@{`oval`}\"\n" +
+                "\t\t\t\t线形 => \n\t\t\t\t${prefix}shape_type=\"@{`line`}\"\n" +
+                "\t\t\t\t环形 => \n\t\t\t\t${prefix}shape_type=\"@{`ring`}\"\n"
         )
     }
 

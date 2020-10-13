@@ -28,10 +28,12 @@ fun ViewPager.bindFragmentAdapter(fragments: List<Fragment>,
         else -> null
     }
     val newTitles = titles ?: getXmlTabItemTexts()
-    this.adapter = object : FragmentPagerAdapter(newFragmentManager){
-        override fun getCount() = fragments.size
-        override fun getItem(position: Int) = fragments[position]
-        override fun getPageTitle(position: Int) = newTitles?.get(position)
+    newFragmentManager?.apply {
+        this@bindFragmentAdapter.adapter = object : FragmentPagerAdapter(this){
+            override fun getCount() = fragments.size
+            override fun getItem(position: Int) = fragments[position]
+            override fun getPageTitle(position: Int) = newTitles?.get(position)
+        }
     }
 }
 
@@ -59,7 +61,7 @@ fun ViewPager.getXmlTabItemTexts(): List<CharSequence?>?{
 }
 
 
-@BindingAdapter("tools:bind_bottom_navigation")
+@BindingAdapter("bind_bottom_navigation")
 fun ViewPager.bindBottomNavigationView(bottomNavigationView: BottomNavigationView){
     bindBottomNavigationView(bottomNavigationView, false)
 }
