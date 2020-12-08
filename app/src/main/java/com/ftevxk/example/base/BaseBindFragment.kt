@@ -22,4 +22,20 @@ abstract class BaseBindFragment<Binding : ViewBinding> : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return binding.root
     }
+
+    open fun onActivityResume() {
+        childFragmentManager.fragments.forEach { fragment ->
+            if (fragment is BaseBindFragment<*>) {
+                fragment.onActivityResume()
+            }
+        }
+    }
+
+    open fun onActivityPause() {
+        childFragmentManager.fragments.forEach { fragment ->
+            if (fragment is BaseBindFragment<*>) {
+                fragment.onActivityPause()
+            }
+        }
+    }
 }

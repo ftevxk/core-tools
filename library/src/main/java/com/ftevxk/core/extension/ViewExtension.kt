@@ -8,7 +8,10 @@ import android.content.ContextWrapper
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.Paint
+import android.text.Editable
 import android.text.Html
+import android.text.TextWatcher
 import android.view.GestureDetector
 import android.view.View
 import android.view.ViewGroup
@@ -23,6 +26,14 @@ import androidx.fragment.app.FragmentActivity
 import com.bumptech.glide.Glide
 import org.jetbrains.anko.firstChildOrNull
 import kotlin.concurrent.thread
+
+/**
+ * 在XML布局里直接自定义drawable的宽高
+ */
+@BindingAdapter(value = ["drawable_size", "unit"], requireAll = false)
+fun TextView.customDrawableSize(size: Number, unit: String? = null) {
+    customDrawableSize(size, size, unit)
+}
 
 /**
  * 在XML布局里直接自定义drawable的宽高
@@ -44,14 +55,24 @@ fun TextView.customDrawableSize(width: Number, height: Number, unit: String? = n
 @BindingAdapter("html")
 fun TextView.setSimpleHtml(html: String?) {
     if (!html.isNullOrEmpty()) {
-        Html.fromHtml(html, {
+        Html.fromHtml(html, Html.ImageGetter {
             thread {
                 val drawable = Glide.with(this).load(it).submit().get()
                 drawable.setBounds(0, 0, drawable.intrinsicWidth, drawable.intrinsicHeight)
-                post { this.text = Html.fromHtml(html, { drawable }, null) }
+                post { this.text = Html.fromHtml(html, Html.ImageGetter { drawable }, null) }
             }
             null
         }, null)
+    }
+}
+
+/**
+ * TextView添加删除线
+ */
+@BindingAdapter("deleteLine")
+fun TextView.addDeleteLine(deleteLine: Boolean) {
+    if (deleteLine) {
+        this.paint.flags = Paint.STRIKE_THRU_TEXT_FLAG
     }
 }
 
@@ -70,6 +91,29 @@ fun EditText.inputState(showInput: Boolean) {
         this.clearFocus()
         manager.hideSoftInputFromWindow(this.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
     }
+}
+
+/**
+ * 简化监听文字改变事件
+ */
+fun EditText.addTextChangeListener(
+        beforeTextChangedListener: ((s: CharSequence?, start: Int, count: Int, after: Int) -> Unit)? = null,
+        afterTextChangedListener: ((s: Editable?) -> Unit)? = null,
+        onTextChangedListener: ((s: CharSequence?, start: Int, before: Int, count: Int) -> Unit)? = null
+) {
+    addTextChangedListener(object : TextWatcher {
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            beforeTextChangedListener?.invoke(s, start, count, after)
+        }
+
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            onTextChangedListener?.invoke(s, start, before, count)
+        }
+
+        override fun afterTextChanged(s: Editable?) {
+            afterTextChangedListener?.invoke(s)
+        }
+    })
 }
 
 /**

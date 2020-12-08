@@ -5,6 +5,16 @@ import android.os.Looper
 import androidx.databinding.ObservableBoolean
 
 /**
+ * 反射获取私有字段
+ */
+inline fun <reified T> getDeclaredField(obj: Any, name: String): T {
+    return obj.javaClass.getDeclaredField(name).run {
+        isAccessible = true
+        get(obj) as T
+    }
+}
+
+/**
  * 执行延时任务
  * @return 调用 ObservableBoolean.set(true) 可取消当前延迟任务
  */

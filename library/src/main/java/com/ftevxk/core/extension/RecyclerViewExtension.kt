@@ -143,14 +143,14 @@ fun RecyclerView.getItemViewHolder(position: Int): RecyclerView.ViewHolder? {
  * RecyclerView获得item的ViewDataBinding
  */
 fun <VDB : ViewDataBinding> RecyclerView.getItemBinding(position: Int): VDB? {
-    return (getItemViewHolder(position) as? DataBindAdapter.ViewHolder)?.binding as? VDB
+    return (getItemViewHolder(position) as? DataBindAdapter.BindViewHolder)?.binding as? VDB
 }
 
 /**
  * ViewHolder获得item的ViewDataBinding
  */
 fun <VDB : ViewDataBinding> RecyclerView.ViewHolder.getItemBinding(): VDB? {
-    return (this as? DataBindAdapter.ViewHolder)?.binding as? VDB
+    return (this as? DataBindAdapter.BindViewHolder)?.binding as? VDB
 }
 
 /*****************************************************************
@@ -179,16 +179,6 @@ fun RecyclerView.buildSimpleBindAdapter(divider: Boolean = true) {
 }
 
 /**
- * XML布局绑定DataBindAdapter
- */
-@BindingAdapter("bind_data_adapter")
-fun RecyclerView.bindDataAdapter(bindDataAdapter: Boolean) {
-    if (bindDataAdapter) {
-        this.adapter = DataBindAdapter()
-    }
-}
-
-/**
  * 设置DataBindAdapter绑定空数据页面，自动根据Item数量处理空数据页面显示隐藏
  */
 @BindingAdapter("empty_view")
@@ -202,20 +192,39 @@ fun RecyclerView.bindEmptyView(emptyView: View) {
     }
 }
 
+val RecyclerView.itemCount get() = adapter?.itemCount ?: 0
+
 fun RecyclerView.getDataBindAdapter(): DataBindAdapter? {
     return adapter as? DataBindAdapter
 }
 
 fun <T : IDataBindItemModel> RecyclerView.diffItemModels(newModels: MutableList<T>) {
+    if (getDataBindAdapter() == null) {
+        this.adapter = DataBindAdapter()
+    }
     getDataBindAdapter()?.diffItemModels(newModels)
 }
 
 fun <T : IDataBindItemModel> RecyclerView.setItemModels(newModels: MutableList<T>) {
+    if (getDataBindAdapter() == null) {
+        this.adapter = DataBindAdapter()
+    }
     getDataBindAdapter()?.setItemModels(newModels)
 }
 
 fun <T : IDataBindItemModel> RecyclerView.addItemModels(newModels: MutableList<T>) {
+    if (getDataBindAdapter() == null) {
+        this.adapter = DataBindAdapter()
+    }
     getDataBindAdapter()?.addItemModels(newModels)
+}
+
+fun <T : IDataBindItemModel> RecyclerView.setItemModel(
+        model: T, position: Int = -1, additional: Boolean = false): DataBindAdapter? {
+    if (getDataBindAdapter() == null) {
+        this.adapter = DataBindAdapter()
+    }
+    return getDataBindAdapter()?.setItemModel(model, position, additional)
 }
 
 fun <T : IDataBindItemModel> RecyclerView.getItemModels(): MutableList<T>? {
@@ -226,13 +235,12 @@ fun <T : IDataBindItemModel> RecyclerView.getItemModel(position: Int): T? {
     return getDataBindAdapter()?.getItemModel(position)
 }
 
-fun <T : IDataBindItemModel> RecyclerView.setItemModel(
-        model: T, position: Int = -1, additional: Boolean = false): DataBindAdapter? {
-    return getDataBindAdapter()?.setItemModel(model, position, additional)
-}
-
 fun RecyclerView.setBindAdapterListener(listener: DataBindAdapter.BindAdapterListener) {
     getDataBindAdapter()?.bindAdapterListener = listener
+}
+
+fun RecyclerView.clearItemModels(){
+    getDataBindAdapter()?.clearItemModels()
 }
 
 fun RecyclerView.removeItemModel(model: IDataBindItemModel): Int? {
@@ -243,10 +251,18 @@ fun RecyclerView.removeItemModel(index: Int): IDataBindItemModel? {
     return getDataBindAdapter()?.removeItemModel(index)
 }
 
+fun RecyclerView.indexItemModel(model: IDataBindItemModel): Int? {
+    return getItemModels<IDataBindItemModel>()?.indexOf(model)
+}
+
 fun <T : IDataBindItemModel> RecyclerView.ViewHolder.getItemModels(): MutableList<T>? {
-    return (this as? DataBindAdapter.ViewHolder)?.adapter?.getItemModels()
+    return (this as? DataBindAdapter.BindViewHolder)?.adapter?.getItemModels()
 }
 
 fun <T : IDataBindItemModel> RecyclerView.ViewHolder.getItemModel(position: Int): T? {
-    return (this as? DataBindAdapter.ViewHolder)?.adapter?.getItemModel(position)
+    return (this as? DataBindAdapter.BindViewHolder)?.adapter?.getItemModel(position)
+}
+
+fun <VDB : ViewDataBinding> RecyclerView.ViewHolder.getBinding(): VDB? {
+    return (this as? DataBindAdapter.BindViewHolder)?.binding as? VDB
 }

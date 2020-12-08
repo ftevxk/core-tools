@@ -7,7 +7,7 @@ apply plugin: 'kotlin-kapt'
 android {
     compileSdkVersion TARGET_SDK_VERSION.toInteger()
     defaultConfig {
-        applicationId "com.ftevxk.example"
+        applicationId APPLICATION_ID
         minSdkVersion MIN_SDK_VERSION.toInteger()
         targetSdkVersion TARGET_SDK_VERSION.toInteger()
         versionCode VERSION_CODE.toInteger()
@@ -79,14 +79,10 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     implementation 'com.google.android.material:material:1.2.1'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.2'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
 
     //引用core-tools依赖库
     implementation project(':library')
-//    implementation 'com.ftevxk:core-tools:1.2.0'
-
-    //Glide图片加载库 => https://muyangmin.github.io/glide-docs-cn/
-    implementation 'com.github.bumptech.glide:glide:4.10.0'
 
 //   //官方页面导航库 => https://www.jianshu.com/p/9e08355ed0ff
 //   implementation "androidx.navigation:navigation-fragment-ktx:+"

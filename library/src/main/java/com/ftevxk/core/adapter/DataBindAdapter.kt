@@ -9,14 +9,14 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-
+import com.ftevxk.core.extension.getItemModel
 
 /**
  * DataBinding通用RecyclerView.Adapter封装
  * 需要配合DataBindItemModel作为数据源使用
  * Created by ftevxk on 19-04-26.
  */
-class DataBindAdapter : RecyclerView.Adapter<DataBindAdapter.ViewHolder>() {
+open class DataBindAdapter : RecyclerView.Adapter<DataBindAdapter.BindViewHolder>() {
 
     private var models: MutableList<IDataBindItemModel>? = null
     private val customBindingPositions by lazy { SparseIntArray() }
@@ -40,7 +40,7 @@ class DataBindAdapter : RecyclerView.Adapter<DataBindAdapter.ViewHolder>() {
      * 根据位置获得ItemModel
      */
     fun <T : IDataBindItemModel> getItemModel(position: Int): T? {
-        return getItemModels<T>()[position]
+        return if (position < itemCount) getItemModels<T>()[position] else null
     }
 
     /**
@@ -132,6 +132,14 @@ class DataBindAdapter : RecyclerView.Adapter<DataBindAdapter.ViewHolder>() {
     }
 
     /**
+     * 清除数据
+     */
+    fun clearItemModels(){
+        models?.clear()
+        notifyDataSetChanged()
+    }
+
+    /**
      * 设置ItemModel列表，内部判断数据差异进行通知刷新界面
      */
     fun <T : IDataBindItemModel> diffItemModels(newModels: MutableList<T>) {
@@ -171,19 +179,24 @@ class DataBindAdapter : RecyclerView.Adapter<DataBindAdapter.ViewHolder>() {
         models = newModels as MutableList<IDataBindItemModel>
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BindViewHolder {
         //判断类型是否为自定义ViewDataBinding
         val customPosition = customBindingPositions.get(viewType, -1)
+        var model: IDataBindItemModel? = null
         val binding = if (customPosition != -1) {
-            getItemModel<IDataBindItemModel>(customPosition)!!.bindItemModelInfo.customBinding!!
+            model = getItemModel(customPosition)!!
+            model.bindItemModelInfo.customBinding!!
         } else {
             DataBindingUtil.inflate(LayoutInflater.from(parent.context), viewType, parent, false)
         }
         bindAdapterListener?.onCreateViewHolder(binding)
-        return ViewHolder(this, binding)
+        val holder = BindViewHolder(this, binding)
+        //触发IDataBindItemModel的onCreateViewHolder
+        model?.onCreateViewHolder(holder, customPosition)
+        return holder
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: BindViewHolder, position: Int) {
         bindAdapterListener?.onBindViewHolderBefore(holder, position)
         val model = getItemModels<IDataBindItemModel>()[position]
         //默认的VariableId绑定
@@ -194,6 +207,8 @@ class DataBindAdapter : RecyclerView.Adapter<DataBindAdapter.ViewHolder>() {
         model.bindItemModelInfo.customData?.forEach {
             holder.binding.setVariable(it.first, it.second)
         }
+        //触发IDataBindItemModel的onBindViewHolder
+        model.onBindViewHolder(holder, position)
         bindAdapterListener?.onBindViewHolderAfter(holder, position, model)
         //数据改变时立刻刷新UI
         holder.binding.executePendingBindings()
@@ -216,23 +231,25 @@ class DataBindAdapter : RecyclerView.Adapter<DataBindAdapter.ViewHolder>() {
         }
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int, payloads: MutableList<Any>) {
+    override fun onBindViewHolder(holder: BindViewHolder, position: Int, payloads: MutableList<Any>) {
         if (bindAdapterListener?.onBindViewHolder(holder, position, payloads) != true) {
             super.onBindViewHolder(holder, position, payloads)
         }
     }
 
-    override fun onViewAttachedToWindow(holder: ViewHolder) {
+    override fun onViewAttachedToWindow(holder: BindViewHolder) {
         super.onViewAttachedToWindow(holder)
         bindAdapterListener?.onViewAttachedToWindow(holder)
+        holder.getItemModel<IDataBindItemModel>(holder.layoutPosition)?.onViewAttachedToWindow(holder)
     }
 
-    override fun onViewDetachedFromWindow(holder: ViewHolder) {
+    override fun onViewDetachedFromWindow(holder: BindViewHolder) {
         super.onViewDetachedFromWindow(holder)
         bindAdapterListener?.onViewDetachedFromWindow(holder)
+        holder.getItemModel<IDataBindItemModel>(holder.layoutPosition)?.onViewDetachedFromWindow(holder)
     }
 
-    override fun onViewRecycled(holder: ViewHolder) {
+    override fun onViewRecycled(holder: BindViewHolder) {
         super.onViewRecycled(holder)
         bindAdapterListener?.onViewRecycled(holder)
     }
@@ -247,35 +264,36 @@ class DataBindAdapter : RecyclerView.Adapter<DataBindAdapter.ViewHolder>() {
         bindAdapterListener?.onDetachedFromRecyclerView(recyclerView)
     }
 
-    override fun onFailedToRecycleView(holder: ViewHolder): Boolean {
+    override fun onFailedToRecycleView(holder: BindViewHolder): Boolean {
         val result = bindAdapterListener?.onFailedToRecycleView(holder)
         return result ?: super.onFailedToRecycleView(holder)
     }
 
     /********************************************************
-     * ViewHolder及BindAdapterListener接口
+     * BindViewHolder及BindAdapterListener接口
      ********************************************************/
 
-    class ViewHolder(val adapter: DataBindAdapter, val binding: ViewDataBinding) : RecyclerView.ViewHolder(binding.root)
+    class BindViewHolder(val adapter: DataBindAdapter, val binding: ViewDataBinding) :
+            RecyclerView.ViewHolder(binding.root)
 
     interface BindAdapterListener {
         //onBindViewHolder数据绑定之前执行
-        fun onBindViewHolderBefore(holder: ViewHolder, position: Int) {}
+        fun onBindViewHolderBefore(holder: BindViewHolder, position: Int) {}
 
         //onBindViewHolder数据绑定之后执行
-        fun onBindViewHolderAfter(holder: ViewHolder, position: Int, model: IDataBindItemModel) {}
+        fun onBindViewHolderAfter(holder: BindViewHolder, position: Int, model: IDataBindItemModel) {}
 
         //需要处理局部刷新调用，返回true会中止后续onBindViewHolder(holder: ViewHolder, position: Int)的执行
-        fun onBindViewHolder(holder: ViewHolder, position: Int, payloads: MutableList<Any>): Boolean? = null
+        fun onBindViewHolder(holder: BindViewHolder, position: Int, payloads: MutableList<Any>): Boolean? = null
 
         //通知改变回调监听，原RecyclerView.AdapterDataObserver部分监听失效
         fun onNotifyChange(oldModels: MutableList<IDataBindItemModel>, newModels: MutableList<IDataBindItemModel>) {}
 
         fun onCreateViewHolder(viewDataBinding: ViewDataBinding) {}
-        fun onViewAttachedToWindow(holder: ViewHolder) {}
-        fun onViewDetachedFromWindow(holder: ViewHolder) {}
-        fun onViewRecycled(holder: ViewHolder) {}
-        fun onFailedToRecycleView(holder: ViewHolder): Boolean? = null
+        fun onViewAttachedToWindow(holder: BindViewHolder) {}
+        fun onViewDetachedFromWindow(holder: BindViewHolder) {}
+        fun onViewRecycled(holder: BindViewHolder) {}
+        fun onFailedToRecycleView(holder: BindViewHolder): Boolean? = null
         fun onAttachedToRecyclerView(recyclerView: RecyclerView) {}
         fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {}
     }

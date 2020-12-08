@@ -21,4 +21,22 @@ abstract class BaseBindActivity<Binding : ViewBinding> : AppCompatActivity(){
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
     }
+
+    override fun onResume() {
+        super.onResume()
+        supportFragmentManager.fragments.forEach { fragment ->
+            if (fragment is BaseBindFragment<*>) {
+                fragment.onActivityResume()
+            }
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        supportFragmentManager.fragments.forEach { fragment ->
+            if (fragment is BaseBindFragment<*>) {
+                fragment.onActivityPause()
+            }
+        }
+    }
 }

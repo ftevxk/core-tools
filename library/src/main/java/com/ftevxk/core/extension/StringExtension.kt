@@ -2,9 +2,28 @@
 
 package com.ftevxk.core.extension
 
+import android.content.ClipData
+import android.content.Context
+import org.jetbrains.anko.clipboardManager
 import java.security.MessageDigest
 import java.text.SimpleDateFormat
 import java.util.*
+
+/**
+ * 返回不为Null的String串
+ * @param replace 当为Null时的替代String
+ */
+fun String?.getNotNullStr(vararg replace: String?): String {
+    if (!this.isNullOrBlank()) {
+        return this
+    }
+    replace.forEach {
+        if (!it.isNullOrBlank()) {
+            return it
+        }
+    }
+    return ""
+}
 
 /**
  * 返回指定格式时间 - String转Date
@@ -25,7 +44,10 @@ fun Any.getFormatString(format: String = "yyyy-MM-dd", locale: Locale = Locale.C
 /**
  * 字符串md5加密
  */
-fun String.md5(): String {
+fun String.md5(emptyMd5: Boolean = true): String {
+    if (!emptyMd5 && this.isEmpty()) {
+        return ""
+    }
     return this.toByteArray().md5()
 }
 
@@ -53,7 +75,7 @@ fun ByteArray.md5(): String {
 fun String.splitStr(maxLength: Int = 4 * 1024): Array<String> {
     var start = 0
     val strings = Array(this.length / maxLength + 1) { "" }
-    for (i in 0 until strings.size) {
+    for (i in strings.indices) {
         if (start + maxLength < this.length) {
             strings[i] = this.substring(start, start + maxLength)
             start += maxLength
@@ -63,4 +85,17 @@ fun String.splitStr(maxLength: Int = 4 * 1024): Array<String> {
         }
     }
     return strings
+}
+
+/**
+ * 简单复制文本到剪切板
+ */
+fun String.copyToClipboard(context: Context, label: String = "label"): Boolean {
+    return try {
+        context.clipboardManager.setPrimaryClip(ClipData.newPlainText(label, this))
+        true
+    } catch (e: Exception) {
+        e.printStackTrace()
+        false
+    }
 }

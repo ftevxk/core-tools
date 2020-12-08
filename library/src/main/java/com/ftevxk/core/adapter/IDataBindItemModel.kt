@@ -22,6 +22,44 @@ interface IDataBindItemModel {
      * 默认不重写的话直接对比对象是否相等，非data class需要重写equals处理
      */
     fun sameContent(): Any? = null
+
+    /**
+     * model数据更改通知更新
+     */
+    fun notifyUpdateModel() {
+        bindItemModelInfo.modelUpdateListener?.invoke(this)
+    }
+
+    /**
+     * adapter的onCreateViewHolder回调
+     */
+    fun onCreateViewHolder(holder: DataBindAdapter.BindViewHolder, position: Int) {
+
+    }
+
+    /**
+     * adapter的onBindViewHolder回调
+     */
+    fun onBindViewHolder(holder: DataBindAdapter.BindViewHolder, position: Int) {
+
+    }
+
+    /**
+     * adapter的onViewAttachedToWindow回调
+     */
+    fun onViewAttachedToWindow(holder: DataBindAdapter.BindViewHolder) {
+        bindItemModelInfo.modelUpdateListener = {
+            holder.binding.setVariable(bindItemModelInfo.variableId, it)
+            holder.binding.executePendingBindings()
+        }
+    }
+
+    /**
+     * adapter的onViewDetachedFromWindow回调
+     */
+    fun onViewDetachedFromWindow(holder: DataBindAdapter.BindViewHolder) {
+        bindItemModelInfo.modelUpdateListener = null
+    }
 }
 
 /*********************************
@@ -42,7 +80,9 @@ data class BindItemModelInfo(
         var diffId: Int = View.generateViewId(),
         var customBinding: ViewDataBinding? = null,
         var customData: List<Pair<Int, Any>>? = null
-)
+) {
+    internal var modelUpdateListener: ((model: IDataBindItemModel) -> Unit)? = null
+}
 
 /**
  * 重置item布局
