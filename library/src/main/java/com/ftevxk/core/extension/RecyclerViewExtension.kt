@@ -220,11 +220,19 @@ fun <T : IDataBindItemModel> RecyclerView.addItemModels(newModels: MutableList<T
 }
 
 fun <T : IDataBindItemModel> RecyclerView.setItemModel(
-        model: T, position: Int = -1, additional: Boolean = false): DataBindAdapter? {
+        model: T, position: Int): DataBindAdapter? {
     if (getDataBindAdapter() == null) {
         this.adapter = DataBindAdapter()
     }
-    return getDataBindAdapter()?.setItemModel(model, position, additional)
+    return getDataBindAdapter()?.setItemModel(model, position)
+}
+
+fun <T : IDataBindItemModel> RecyclerView.addItemModel(
+        model: T, position: Int = -1): DataBindAdapter? {
+    if (getDataBindAdapter() == null) {
+        this.adapter = DataBindAdapter()
+    }
+    return getDataBindAdapter()?.addItemModel(model, position)
 }
 
 fun <T : IDataBindItemModel> RecyclerView.getItemModels(): MutableList<T>? {
@@ -239,7 +247,7 @@ fun RecyclerView.setBindAdapterListener(listener: DataBindAdapter.BindAdapterLis
     getDataBindAdapter()?.bindAdapterListener = listener
 }
 
-fun RecyclerView.clearItemModels(){
+fun RecyclerView.clearItemModels() {
     getDataBindAdapter()?.clearItemModels()
 }
 

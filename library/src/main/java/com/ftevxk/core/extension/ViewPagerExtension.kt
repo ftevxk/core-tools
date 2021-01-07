@@ -3,15 +3,17 @@
 package com.ftevxk.core.extension
 
 import android.util.SparseIntArray
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.BindingAdapter
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentPagerAdapter
-import androidx.viewpager.widget.ViewPager
+import androidx.lifecycle.Lifecycle
+import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.tabs.TabLayout
-import org.jetbrains.anko.forEachChild
+import com.google.android.material.tabs.TabLayoutMediator
 
 /**
  * 设置是否开启预加载
@@ -24,14 +26,14 @@ fun ViewPager2.setItemPrefetchEnabled(enable: Boolean) {
  * ViewPager2绑定Adapter设定联动TabLayout
  ****************************************************************/
 
-fun ViewPager2.bindFragmentStateAdapter(baseActivity: BaseActivity, fragments: List<Fragment>,
+fun ViewPager2.bindFragmentStateAdapter(activity: AppCompatActivity, fragments: List<Fragment>,
                                         tabLayout: TabLayout?, smoothScroll: Boolean = true, tabs: List<String>? = null) {
-    bindFragmentStateAdapter(baseActivity.lifecycle, baseActivity.supportFragmentManager, fragments, tabLayout, smoothScroll, tabs)
+    bindFragmentStateAdapter(activity.lifecycle, activity.supportFragmentManager, fragments, tabLayout, smoothScroll, tabs)
 }
 
-fun ViewPager2.bindFragmentStateAdapter(baseFragment: BaseFragment, fragments: List<Fragment>,
+fun ViewPager2.bindFragmentStateAdapter(fragment: Fragment, fragments: List<Fragment>,
                                         tabLayout: TabLayout?, smoothScroll: Boolean = true, tabs: List<String>? = null) {
-    bindFragmentStateAdapter(baseFragment.lifecycle, baseFragment.childFragmentManager, fragments, tabLayout, smoothScroll, tabs)
+    bindFragmentStateAdapter(fragment.lifecycle, fragment.childFragmentManager, fragments, tabLayout, smoothScroll, tabs)
 }
 
 fun ViewPager2.bindFragmentStateAdapter(lifecycle: Lifecycle, fragmentManager: FragmentManager,
@@ -124,7 +126,7 @@ fun ViewPager2.bindBottomNavigationView(bottomNavigationView: BottomNavigationVi
                 return@setOnNavigationItemSelectedListener false
             }
         }
-        this.registerOnPageChangeCallback(object : OnPageChangeCallback() {
+        this.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
                 val itemId = arrays[position]

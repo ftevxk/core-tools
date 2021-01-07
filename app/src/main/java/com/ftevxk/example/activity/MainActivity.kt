@@ -10,9 +10,9 @@ import android.widget.EditText
 import com.ftevxk.core.extension.*
 import com.ftevxk.core.widget.InterceptEditText
 import com.ftevxk.example.base.BaseBindActivity
-import com.ftevxk.example.viewmodel.MainItemModel
 import com.ftevxk.example.databinding.ActivityMainBinding
 import com.ftevxk.example.databinding.ItemMainBinding
+import com.ftevxk.example.viewmodel.MainItemModel
 import org.jetbrains.anko.alert
 import org.jetbrains.anko.toast
 import kotlin.random.Random
@@ -59,7 +59,7 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>() {
             } else {
                 //拷贝一个仅替换title
                 val model = models[position]
-                    .copy(title = Random.nextInt(100).toString())
+                        .copy(title = Random.nextInt(100).toString())
                 //RecyclerView设置单条数据
                 binding.recycler.setItemModel(model, position)
             }
@@ -83,8 +83,8 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>() {
         super.onCreateOptionsMenu(menu)
         //右上角增加添加按钮
         menu?.add(0, menuId, 0, "添加")
-            ?.setIcon(android.R.drawable.ic_menu_add)
-            ?.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
+                ?.setIcon(android.R.drawable.ic_menu_add)
+                ?.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
         return true
     }
 
@@ -99,20 +99,14 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>() {
                     positiveButton("确定") {
                         if (editText.text.isEmpty()) {
                             //如果不输入位置则追加在末尾
-                            binding.recycler.setItemModel(
-                                MainItemModel(title = "new-${Random.nextInt(100)}"),
-                                additional = true
-                            )
+                            binding.recycler.addItemModel(MainItemModel(title = "new-${Random.nextInt(100)}"))
                         } else {
                             //将数据插入指定位置
                             val index = editText.text.toString().toInt()
                             if (index > models.size) {
                                 toast("ItemModel插入的位置不能大于${models.size}")
                             } else {
-                                binding.recycler.setItemModel(
-                                    MainItemModel(title = "new-${Random.nextInt(100)}"),
-                                    index, true
-                                )
+                                binding.recycler.addItemModel(MainItemModel(title = "new-${Random.nextInt(100)}"), index)
                             }
                         }
                     }
