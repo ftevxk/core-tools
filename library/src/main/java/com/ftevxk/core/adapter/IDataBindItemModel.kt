@@ -60,6 +60,13 @@ interface IDataBindItemModel {
     fun onViewDetachedFromWindow(holder: DataBindAdapter.BindViewHolder) {
         bindItemModelInfo.modelUpdateListener = null
     }
+
+    /**
+     * adapter的onViewRecycled回调
+     */
+    fun onViewRecycled(holder: DataBindAdapter.BindViewHolder) {
+
+    }
 }
 
 /*********************************

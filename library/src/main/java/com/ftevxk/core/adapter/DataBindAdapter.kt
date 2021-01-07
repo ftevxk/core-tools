@@ -40,33 +40,43 @@ open class DataBindAdapter : RecyclerView.Adapter<DataBindAdapter.BindViewHolder
      * 根据位置获得ItemModel
      */
     fun <T : IDataBindItemModel> getItemModel(position: Int): T? {
-        return if (position < itemCount) getItemModels<T>()[position] else null
+        return if (position <itemCount) getItemModels<T>()[position] else null
     }
 
     /**
      * 设置单个ItemModel
-     * @param additional 是否为追加数据
      */
-    fun <T : IDataBindItemModel> setItemModel(model: T, position: Int = -1, additional: Boolean = false): DataBindAdapter {
+    fun <T : IDataBindItemModel> setItemModel(model: T, position: Int): DataBindAdapter {
         //旧数据临时变量
         val tempModels = if (bindAdapterListener != null) {
             mutableListOf(models) as MutableList<IDataBindItemModel>
         } else getItemModels()
         //逻辑操作
-        if (additional) {
-            if (position in 0 until getItemModels<T>().size) {
-                getItemModels<T>().add(position, model)
-                notifyItemInserted(position)
-                notifyItemRangeChanged(position, itemCount - position)
-            } else {
-                getItemModels<T>().add(model)
-                notifyItemInserted(itemCount)
-            }
+        if (position in 0 until itemCount) {
+            getItemModels<T>()[position] = model
+            notifyItemChanged(position)
+        }
+        //通知回调
+        bindAdapterListener?.onNotifyChange(tempModels, getItemModels())
+        return this
+    }
+
+    /**
+     * 追加单个ItemModel
+     */
+    fun <T : IDataBindItemModel> addItemModel(model: T, position: Int = -1): DataBindAdapter {
+        //旧数据临时变量
+        val tempModels = if (bindAdapterListener != null) {
+            mutableListOf(models) as MutableList<IDataBindItemModel>
+        } else getItemModels()
+        //逻辑操作
+        if (position in 0 until getItemModels<T>().size) {
+            getItemModels<T>().add(position, model)
+            notifyItemInserted(position)
+            notifyItemRangeChanged(position, itemCount - position)
         } else {
-            if (position in 0 until itemCount) {
-                getItemModels<T>()[position] = model
-                notifyItemChanged(position)
-            }
+            getItemModels<T>().add(model)
+            notifyItemInserted(itemCount)
         }
         //通知回调
         bindAdapterListener?.onNotifyChange(tempModels, getItemModels())
@@ -96,7 +106,7 @@ open class DataBindAdapter : RecyclerView.Adapter<DataBindAdapter.BindViewHolder
     /**
      * 根据位置移除ItemModel
      */
-    fun removeItemModel(index: Int): IDataBindItemModel? {
+    fun removeItemModel(index: Int): IDataBindItemModel {
         //旧数据临时变量
         val tempModels = if (bindAdapterListener == null) {
             mutableListOf(models) as MutableList<IDataBindItemModel>
@@ -134,7 +144,7 @@ open class DataBindAdapter : RecyclerView.Adapter<DataBindAdapter.BindViewHolder
     /**
      * 清除数据
      */
-    fun clearItemModels(){
+    fun clearItemModels() {
         models?.clear()
         notifyDataSetChanged()
     }
@@ -166,7 +176,7 @@ open class DataBindAdapter : RecyclerView.Adapter<DataBindAdapter.BindViewHolder
                 }
             }
 
-            override fun getChangePayload(oldItemPosition: Int, newItemPosition: Int): Any? {
+            override fun getChangePayload(oldItemPosition: Int, newItemPosition: Int): Any {
                 //避免整个item出现闪一下动画
                 return ""
             }
@@ -252,6 +262,7 @@ open class DataBindAdapter : RecyclerView.Adapter<DataBindAdapter.BindViewHolder
     override fun onViewRecycled(holder: BindViewHolder) {
         super.onViewRecycled(holder)
         bindAdapterListener?.onViewRecycled(holder)
+        holder.getItemModel<IDataBindItemModel>(holder.layoutPosition)?.onViewRecycled(holder)
     }
 
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {

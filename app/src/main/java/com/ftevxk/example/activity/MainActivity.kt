@@ -7,7 +7,6 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputConnection
 import android.widget.EditText
-import androidx.appcompat.app.AppCompatActivity
 import com.ftevxk.core.extension.*
 import com.ftevxk.core.widget.InterceptEditText
 import com.ftevxk.example.base.BaseBindActivity

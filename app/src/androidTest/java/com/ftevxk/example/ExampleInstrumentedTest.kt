@@ -2,8 +2,8 @@ package com.ftevxk.example
 
 import androidx.test.rule.ActivityTestRule
 import com.ftevxk.core.extension.dLog
-import com.ftevxk.core.extension.getSpValue
-import com.ftevxk.core.extension.putSpValue
+import com.ftevxk.core.extension.getSpStore
+import com.ftevxk.core.extension.putSpStore
 import com.ftevxk.core.extension.removeSpKey
 import com.ftevxk.example.activity.MainActivity
 import org.junit.Rule
@@ -28,12 +28,12 @@ class ExampleInstrumentedTest {
     @Test
     fun testSpValue() {
         testRemoveSpValue()
-        testPutSpValue()
-        testGetSpValue()
+        testPutSpStore()
+        testGetSpStore()
     }
 
-    private fun testPutSpValue() {
-        activity.putSpValue(
+    private fun testPutSpStore() {
+        activity.putSpStore(
             "111" to 123456.0,
             "222" to mutableListOf(true, 0.11f, 0.22, "666", 111, 222L),
             "333" to mutableMapOf(true to 0.11f, "666" to 111)
@@ -41,10 +41,10 @@ class ExampleInstrumentedTest {
         dLog("putSpValue Success")
     }
 
-    private fun testGetSpValue() {
-        val key111 = activity.getSpValue("111", 0.0)
-        val key222 = activity.getSpValue("222", mutableListOf<Any>("empty"))
-        val key333 = activity.getSpValue("333", mutableMapOf<Any, Any>("empty" to ""))
+    private fun testGetSpStore() {
+        val key111 = activity.getSpStore("111", 0.0)
+        val key222 = activity.getSpStore("222", mutableListOf<Any>("empty"))
+        val key333 = activity.getSpStore("333", mutableMapOf<Any, Any>("empty" to ""))
 
         val logStr = StringBuilder()
         logStr.append(" \n")

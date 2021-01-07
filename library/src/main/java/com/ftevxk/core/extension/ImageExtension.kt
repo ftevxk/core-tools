@@ -6,14 +6,13 @@ import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.ColorMatrix
 import android.graphics.ColorMatrixColorFilter
-import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.widget.ImageView
 import androidx.annotation.DrawableRes
-import androidx.core.graphics.drawable.DrawableCompat
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Registry
+import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.annotation.GlideModule
 import com.bumptech.glide.integration.okhttp3.OkHttpUrlLoader
 import com.bumptech.glide.load.Transformation
@@ -21,8 +20,6 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.model.GlideUrl
 import com.bumptech.glide.module.AppGlideModule
 import com.bumptech.glide.request.RequestOptions
-import com.bumptech.glide.request.target.CustomViewTarget
-import com.bumptech.glide.request.transition.Transition
 import okhttp3.OkHttpClient
 import java.io.InputStream
 import java.util.concurrent.TimeUnit
@@ -61,10 +58,10 @@ class OkHttpGlideModule : AppGlideModule() {
  * @param res 任意图片资源
  */
 @BindingAdapter(value = ["res", "placeholder", "error",
-    "asBitmap", "transform", "circle", "thumbnail"], requireAll = false)
+    "asBitmap", "transform", "circle", "diskCache", "thumbnail"], requireAll = false)
 fun ImageView.load(res: Any?, placeholder: Any? = null, error: Any? = null,
                    asBitmap: Boolean = false, transform: Transformation<Bitmap>? = null,
-                   circle: Boolean = false, thumbnail: Float = globalImageThumbnail) {
+                   circle: Boolean = false, diskCache: Boolean = true, thumbnail: Float = globalImageThumbnail) {
     this.load(res, {
         var options = RequestOptions()
         when (placeholder) {
@@ -82,24 +79,29 @@ fun ImageView.load(res: Any?, placeholder: Any? = null, error: Any? = null,
         } else if (circle) {
             options = options.circleCrop()
         }
-        options.skipMemoryCache(false).diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+        options.skipMemoryCache(false)
+        if (diskCache) {
+            options.diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+        } else {
+            options.diskCacheStrategy(DiskCacheStrategy.NONE)
+        }
     }, asBitmap, thumbnail)
 }
 
 /**
  * 自定义RequestOptions的图片加载
  */
-fun ImageView.load(res: Any?, options: () -> RequestOptions?, asBitmap: Boolean = false, thumbnail: Float = 0f) {
+fun ImageView.load(res: Any?, options: () -> RequestOptions?, asBitmap: Boolean = false, thumbnail: Float = 0f): RequestBuilder<*> {
     val url = if (res is String && res.startsWith("//")) "http:$res" else res
-    if (asBitmap) {
+    return if (asBitmap) {
         Glide.with(this).asBitmap().load(url)
                 .apply(options.invoke() ?: defaultOptions)
-                .thumbnail(thumbnail).into(this)
+                .thumbnail(thumbnail)
     } else {
         Glide.with(this).load(url)
                 .apply(options.invoke() ?: defaultOptions)
-                .thumbnail(thumbnail).into(this)
-    }
+                .thumbnail(thumbnail)
+    }.apply { into(this@load) }
 }
 
 /**
