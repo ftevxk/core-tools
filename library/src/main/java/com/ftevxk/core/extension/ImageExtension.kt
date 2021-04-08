@@ -74,17 +74,20 @@ fun ImageView.load(res: Any?, placeholder: Any? = null, error: Any? = null,
             is @DrawableRes Int -> options.error(error)
             null -> globalImageError?.run { options.error(this) }
         }
-        if (transform != null) {
-            options = options.transform(transform)
-        } else if (circle) {
-            options = options.circleCrop()
+        if (!(res as? String).isNullOrBlank()){
+            if (transform != null) {
+                options = options.transform(transform)
+            } else if (circle) {
+                options = options.circleCrop()
+            }
+            options = options.skipMemoryCache(false)
+            if (diskCache) {
+                options.diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+            } else {
+                options.diskCacheStrategy(DiskCacheStrategy.NONE)
+            }
         }
-        options.skipMemoryCache(false)
-        if (diskCache) {
-            options.diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
-        } else {
-            options.diskCacheStrategy(DiskCacheStrategy.NONE)
-        }
+        options
     }, asBitmap, thumbnail)
 }
 

@@ -49,20 +49,32 @@ fun TextView.customDrawableSize(width: Number, height: Number, unit: String? = n
     setCompoundDrawables(compoundDrawables[0], compoundDrawables[1], compoundDrawables[2], compoundDrawables[3])
 }
 
+
 /**
- * TextView简单设置Html格式内容
+ * TextView简单设置Html格式资源
+ * 可传入Assets下.html后缀的文件
  */
-@BindingAdapter("html")
-fun TextView.setSimpleHtml(html: String?) {
-    if (!html.isNullOrEmpty()) {
-        Html.fromHtml(html, Html.ImageGetter {
-            thread {
-                val drawable = Glide.with(this).load(it).submit().get()
+@BindingAdapter("htmlRes")
+fun TextView.setSimpleHtml(htmlRes: String?) {
+    if (!htmlRes.isNullOrEmpty()) {
+        //加载读取Assets中的HTML文件
+        val res = if (htmlRes.endsWith(".html")) {
+            this.context.assets.open(htmlRes).readBytes().toString(Charset.defaultCharset())
+        } else htmlRes
+        this@setSimpleHtml.text = HtmlCompat.fromHtml(res, HtmlCompat.FROM_HTML_MODE_LEGACY, { source ->
+            GlobalScope.launch {
+                val drawable = withContext(Dispatchers.IO) {
+                    Glide.with(this@setSimpleHtml).load(source).submit().get()
+                }
                 drawable.setBounds(0, 0, drawable.intrinsicWidth, drawable.intrinsicHeight)
-                post { this.text = Html.fromHtml(html, Html.ImageGetter { drawable }, null) }
+                //添加图片后再次重新设置内容
+                this@setSimpleHtml.text = HtmlCompat.fromHtml(res, HtmlCompat.FROM_HTML_MODE_LEGACY,
+                        { drawable }, null)
             }
-            null
+            return@fromHtml null
         }, null)
+        //设置TextView可以滚动
+        movementMethod = ScrollingMovementMethod.getInstance()
     }
 }
 
