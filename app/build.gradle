@@ -17,7 +17,10 @@ android {
         targetSdkVersion TARGET_SDK_VERSION.toInteger()
         versionCode VERSION_CODE.toInteger()
         versionName VERSION_NAME
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        //编译时间
+        buildConfigField("String", "BUILD_TIME", "\"${dateFormat}\"")
+        //编译时间戳
+        buildConfigField("long", "BUILD_TIMESTAMP", System.currentTimeMillis() + "L")
     }
 
     //签名配置
@@ -35,12 +38,12 @@ android {
         debug {
             //关闭混淆
             minifyEnabled false
+            //设置支持的SO库架构
+            ndk { abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64' }
             //配置应用签名
             signingConfig signingConfigs.config
             //混淆配置文件
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            //编译时间
-            buildConfigField("String", "BUILD_TIME", "\"${dateFormat}\"")
         }
         pre {
             //引用Debug的配置
@@ -59,12 +62,43 @@ android {
             zipAlignEnabled true
             //移除无用的Resource文件
             shrinkResources true
+            //设置支持的SO库架构
+            ndk { abiFilters 'armeabi-v7a' }
             //配置应用签名
             signingConfig signingConfigs.config
             //混淆配置文件
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            //编译时间
-            buildConfigField("String", "BUILD_TIME", "\"${dateFormat}\"")
+        }
+    }
+
+    /*自定义打包apk名称*/
+    android.applicationVariants.all { variant ->
+        variant.outputs.all { output ->
+            if (variant.buildType.name == 'release') {
+                def separator = "_"
+                def versionName = variant.versionName
+                def versionCode = variant.versionCode
+                def apkName = APPLICATION_TAG + separator + versionName +
+                        separator + versionCode + separator + dateFormat + ".apk"
+                output.outputFileName = apkName
+            }
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    sourceSets {
+        main {
+            jni.srcDirs = ['libs']
+        }
+    }
+
+    repositories {
+        flatDir {
+            dirs 'libs'
         }
     }
 
@@ -77,21 +111,37 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-    implementation 'com.google.android.material:material:1.2.1'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+    implementation 'com.google.android.material:material:1.4.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.0'
+    implementation 'androidx.multidex:multidex:2.0.1'
 
-    //引用core-tools依赖库
-    implementation project(':library')
+    //kotlin协程
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.0"
+    //kotlin的Lifecycle扩展
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.3.1"
+    //网络请求
+    implementation 'com.squareup.okhttp3:okhttp:4.8.1'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.8.1'
+    //Glide图片加载库 => https://muyangmin.github.io/glide-docs-cn/
+    kapt 'com.github.bumptech.glide:compiler:4.11.0'
+    implementation 'com.github.bumptech.glide:glide:4.11.0'
+    implementation 'com.github.bumptech.glide:okhttp3-integration:4.11.0'
+    implementation 'com.github.bumptech.glide:annotations:4.11.0'
 
-//   //官方页面导航库 => https://www.jianshu.com/p/9e08355ed0ff
-//   implementation "androidx.navigation:navigation-fragment-ktx:+"
-//   implementation "androidx.navigation:navigation-ui-ktx:+"
-//   //屏幕适配 => https://github.com/JessYanCoding/AndroidAutoSize
-//   implementation 'me.jessyan:autosize:+'
-//   //LitePal数据库 => https://github.com/LitePalFramework/LitePal
-//   implementation 'org.litepal.android:kotlin:+'
-//   //基于LiveData的消息总线 => https://github.com/JeremyLiao/LiveEventBus
-//   implementation 'com.jeremyliao:live-event-bus-x:+'
+    //android相关kotlin扩展库 => https://developer.android.google.cn/kotlin/ktx
+    implementation 'androidx.core:core-ktx:1.7.0'
+    //沉浸式状态栏 => https://github.com/gyf-dev/ImmersionBar
+    implementation 'com.gyf.immersionbar:immersionbar:3.0.0'
+    //权限管理 => https://github.com/yanzhenjie/AndPermission
+    implementation 'com.yanzhenjie:permission:2.0.3'
+    //Logger => https://github.com/orhanobut/logger
+    implementation 'com.orhanobut:logger:2.2.0'
+    //基于LiveData的消息总线 => https://github.com/JeremyLiao/LiveEventBus
+    implementation 'com.jeremyliao:live-event-bus-x:1.7.3'
+    //刷新加载 => https://github.com/scwang90/SmartRefreshLayout
+    implementation 'com.scwang.smart:refresh-layout-kernel:2.0.1'
+    implementation 'com.scwang.smart:refresh-header-classics:2.0.1'
+    implementation 'com.scwang.smart:refresh-footer-classics:2.0.1'
 
     //Test相关
     testImplementation 'junit:junit:4.13.1'

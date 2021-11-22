@@ -10,8 +10,8 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.text.Editable
-import android.text.Html
 import android.text.TextWatcher
+import android.text.method.ScrollingMovementMethod
 import android.view.GestureDetector
 import android.view.View
 import android.view.ViewGroup
@@ -19,13 +19,17 @@ import android.view.ViewTreeObserver
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.TextView
+import androidx.core.text.HtmlCompat
 import androidx.core.view.GestureDetectorCompat
 import androidx.databinding.BindingAdapter
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.bumptech.glide.Glide
-import org.jetbrains.anko.firstChildOrNull
-import kotlin.concurrent.thread
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.nio.charset.Charset
 
 /**
  * 在XML布局里直接自定义drawable的宽高
@@ -48,7 +52,6 @@ fun TextView.customDrawableSize(width: Number, height: Number, unit: String? = n
     if (compoundDrawables[3] != null) compoundDrawables[3].setBounds(0, 0, drawWidth, drawHeight)
     setCompoundDrawables(compoundDrawables[0], compoundDrawables[1], compoundDrawables[2], compoundDrawables[3])
 }
-
 
 /**
  * TextView简单设置Html格式资源
@@ -204,7 +207,12 @@ fun View.resize(width: Int? = null, height: Int? = null) {
  * 查找第一个符合类型的子child
  */
 inline fun <reified V : View> ViewGroup.findFirstChild(): V? {
-    return this.firstChildOrNull { return@firstChildOrNull it is V } as? V
+    for (i in 0 until childCount){
+        if (getChildAt(i) is V){
+            return getChildAt(i) as? V
+        }
+    }
+    return null
 }
 
 /**

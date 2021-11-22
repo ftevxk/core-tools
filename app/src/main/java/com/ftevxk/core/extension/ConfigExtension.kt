@@ -13,6 +13,16 @@ private const val SP_VALID_PERIOD = "sp_valid_period"
 
 private var validPeriodPreference: SharedPreferences? = null
 
+object ConfigExtension {
+    val todayMilliseconds by lazy {
+        val cal = Calendar.getInstance()
+        cal.set(Calendar.HOUR_OF_DAY, 23)
+        cal.set(Calendar.MINUTE, 59)
+        cal.set(Calendar.SECOND, 59)
+        return@lazy cal.timeInMillis
+    }
+}
+
 /**
  * 保存数据到SharedPreferences
  * @param validPeriod 有效期，传入到期时间戳，该有效期针对本次传入的所有

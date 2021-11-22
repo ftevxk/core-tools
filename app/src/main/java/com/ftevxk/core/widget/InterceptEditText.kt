@@ -8,19 +8,19 @@ import android.view.KeyEvent
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputConnection
 import android.view.inputmethod.InputConnectionWrapper
-import android.widget.EditText
+import androidx.appcompat.widget.AppCompatEditText
 
 /**
  * 带拦截的EditText
  * 可拦截字符输入、字符删除、按键输入、光标选择
  */
-class InterceptEditText : EditText {
-    constructor(context: Context?) : this(context, null)
+class InterceptEditText : AppCompatEditText {
+    constructor(context: Context) : this(context, null)
 
-    constructor(context: Context?, attrs: AttributeSet?) :
+    constructor(context: Context, attrs: AttributeSet?) :
             this(context, attrs, android.R.attr.editTextStyle)
 
-    constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) :
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) :
             super(context, attrs, defStyleAttr)
 
     private var interceptListener: InterceptListener? = null
@@ -30,7 +30,7 @@ class InterceptEditText : EditText {
     }
 
     override fun onCreateInputConnection(outAttrs: EditorInfo?): InputConnection {
-        return InterceptInputWrapper(super.onCreateInputConnection(outAttrs))
+        return InterceptInputWrapper(super.onCreateInputConnection(outAttrs)!!)
     }
 
     private inner class InterceptInputWrapper(val target: InputConnection) :

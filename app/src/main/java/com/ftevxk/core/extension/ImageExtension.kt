@@ -12,7 +12,6 @@ import androidx.annotation.DrawableRes
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Registry
-import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.annotation.GlideModule
 import com.bumptech.glide.integration.okhttp3.OkHttpUrlLoader
 import com.bumptech.glide.load.Transformation
@@ -58,9 +57,9 @@ class OkHttpGlideModule : AppGlideModule() {
  * @param res 任意图片资源
  */
 @BindingAdapter(value = ["res", "placeholder", "error",
-    "asBitmap", "transform", "circle", "diskCache", "thumbnail"], requireAll = false)
+    "gif", "transform", "circle", "diskCache", "thumbnail"], requireAll = false)
 fun ImageView.load(res: Any?, placeholder: Any? = null, error: Any? = null,
-                   asBitmap: Boolean = false, transform: Transformation<Bitmap>? = null,
+                   gif: Boolean = false, transform: Transformation<Bitmap>? = null,
                    circle: Boolean = false, diskCache: Boolean = true, thumbnail: Float = globalImageThumbnail) {
     this.load(res, {
         var options = RequestOptions()
@@ -74,7 +73,7 @@ fun ImageView.load(res: Any?, placeholder: Any? = null, error: Any? = null,
             is @DrawableRes Int -> options.error(error)
             null -> globalImageError?.run { options.error(this) }
         }
-        if (!(res as? String).isNullOrBlank()){
+        if (!(res as? String).isNullOrBlank()) {
             if (transform != null) {
                 options = options.transform(transform)
             } else if (circle) {
@@ -88,23 +87,23 @@ fun ImageView.load(res: Any?, placeholder: Any? = null, error: Any? = null,
             }
         }
         options
-    }, asBitmap, thumbnail)
+    }, gif, thumbnail)
 }
 
 /**
  * 自定义RequestOptions的图片加载
  */
-fun ImageView.load(res: Any?, options: () -> RequestOptions?, asBitmap: Boolean = false, thumbnail: Float = 0f): RequestBuilder<*> {
+fun ImageView.load(res: Any?, options: () -> RequestOptions?, gif: Boolean = false, thumbnail: Float = 0f) {
     val url = if (res is String && res.startsWith("//")) "http:$res" else res
-    return if (asBitmap) {
-        Glide.with(this).asBitmap().load(url)
+    if (gif) {
+        Glide.with(this).asGif().load(url)
                 .apply(options.invoke() ?: defaultOptions)
-                .thumbnail(thumbnail)
+                .thumbnail(thumbnail).into(this)
     } else {
         Glide.with(this).load(url)
                 .apply(options.invoke() ?: defaultOptions)
-                .thumbnail(thumbnail)
-    }.apply { into(this@load) }
+                .thumbnail(thumbnail).into(this)
+    }
 }
 
 /**

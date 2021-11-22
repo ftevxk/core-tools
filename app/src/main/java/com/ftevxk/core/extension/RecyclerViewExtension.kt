@@ -97,8 +97,8 @@ open class ItemGesture(private val recyclerView: RecyclerView) :
         val view = recyclerView.findChildViewUnder(e.x, e.y)
         if (view != null) {
             val position = recyclerView.getChildLayoutPosition(view)
-            val holder =
-                    recyclerView.findViewHolderForLayoutPosition(position) as RecyclerView.ViewHolder
+            val holder = recyclerView.findViewHolderForLayoutPosition(position)
+                    as RecyclerView.ViewHolder
             holder.clickRawXY = arrayOf(e.rawX, e.rawY)
             view.performClick()
             onItemClickListener?.invoke(holder, position)
@@ -235,6 +235,14 @@ fun <T : IDataBindItemModel> RecyclerView.addItemModel(
     return getDataBindAdapter()?.addItemModel(model, position)
 }
 
+fun <T : IDataBindItemModel> RecyclerView.moveItemModel(
+        model: T, toIndex: Int): DataBindAdapter? {
+    if (getDataBindAdapter() == null) {
+        this.adapter = DataBindAdapter()
+    }
+    return getDataBindAdapter()?.moveItemModel(model, toIndex)
+}
+
 fun <T : IDataBindItemModel> RecyclerView.getItemModels(): MutableList<T>? {
     return getDataBindAdapter()?.getItemModels()
 }
@@ -247,7 +255,7 @@ fun RecyclerView.setBindAdapterListener(listener: DataBindAdapter.BindAdapterLis
     getDataBindAdapter()?.bindAdapterListener = listener
 }
 
-fun RecyclerView.clearItemModels() {
+fun RecyclerView.clearItemModels(){
     getDataBindAdapter()?.clearItemModels()
 }
 

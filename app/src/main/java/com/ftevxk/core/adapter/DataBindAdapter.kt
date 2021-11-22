@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.ftevxk.core.extension.getItemModel
 
+
 /**
  * DataBinding通用RecyclerView.Adapter封装
  * 需要配合DataBindItemModel作为数据源使用
@@ -40,7 +41,7 @@ open class DataBindAdapter : RecyclerView.Adapter<DataBindAdapter.BindViewHolder
      * 根据位置获得ItemModel
      */
     fun <T : IDataBindItemModel> getItemModel(position: Int): T? {
-        return if (position <itemCount) getItemModels<T>()[position] else null
+        return if (position in 0 until itemCount) getItemModels<T>()[position] else null
     }
 
     /**
@@ -88,17 +89,9 @@ open class DataBindAdapter : RecyclerView.Adapter<DataBindAdapter.BindViewHolder
      */
     fun removeItemModel(model: IDataBindItemModel): Int {
         getItemModels<IDataBindItemModel>().run {
-            //旧数据临时变量
-            val tempModels = if (bindAdapterListener != null) {
-                mutableListOf(models) as MutableList<IDataBindItemModel>
-            } else getItemModels()
             //移除操作
             val index = indexOf(model)
-            removeAt(index)
-            notifyItemRemoved(index)
-            notifyItemRangeChanged(index, itemCount - index)
-            //移除itemModel通知回调
-            bindAdapterListener?.onNotifyChange(tempModels, getItemModels())
+            removeItemModel(index)
             return index
         }
     }
@@ -114,7 +107,7 @@ open class DataBindAdapter : RecyclerView.Adapter<DataBindAdapter.BindViewHolder
         //移除操作
         val model = getItemModels<IDataBindItemModel>().removeAt(index)
         notifyItemRemoved(index)
-        notifyItemRangeChanged(index, itemCount - index)
+        notifyItemRangeChanged(index, 1)
         //移除itemModel通知回调
         bindAdapterListener?.onNotifyChange(tempModels, getItemModels())
         return model
@@ -139,6 +132,26 @@ open class DataBindAdapter : RecyclerView.Adapter<DataBindAdapter.BindViewHolder
         //将新数据覆盖旧数据
         models = newModels as MutableList<IDataBindItemModel>
         notifyDataSetChanged()
+    }
+
+    /**
+     * 移动ItemModel位置
+     */
+    fun <T : IDataBindItemModel> moveItemModel(model: T, toIndex: Int): DataBindAdapter {
+        //旧数据临时变量
+        val tempModels = if (bindAdapterListener == null) {
+            mutableListOf(models) as MutableList<IDataBindItemModel>
+        } else getItemModels()
+        getItemModels<T>().run {
+            val index = indexOf(model)
+            removeAt(index)
+            add(toIndex, model)
+            notifyItemMoved(index, toIndex)
+            notifyItemRangeChanged(index, 1)
+        }
+        //通知回调
+        bindAdapterListener?.onNotifyChange(tempModels, getItemModels())
+        return this
     }
 
     /**
@@ -250,19 +263,22 @@ open class DataBindAdapter : RecyclerView.Adapter<DataBindAdapter.BindViewHolder
     override fun onViewAttachedToWindow(holder: BindViewHolder) {
         super.onViewAttachedToWindow(holder)
         bindAdapterListener?.onViewAttachedToWindow(holder)
-        holder.getItemModel<IDataBindItemModel>(holder.layoutPosition)?.onViewAttachedToWindow(holder)
+        holder.getItemModel<IDataBindItemModel>(holder.layoutPosition)
+                ?.onViewAttachedToWindow(holder)
     }
 
     override fun onViewDetachedFromWindow(holder: BindViewHolder) {
         super.onViewDetachedFromWindow(holder)
         bindAdapterListener?.onViewDetachedFromWindow(holder)
-        holder.getItemModel<IDataBindItemModel>(holder.layoutPosition)?.onViewDetachedFromWindow(holder)
+        holder.getItemModel<IDataBindItemModel>(holder.layoutPosition)
+                ?.onViewDetachedFromWindow(holder)
     }
 
     override fun onViewRecycled(holder: BindViewHolder) {
         super.onViewRecycled(holder)
         bindAdapterListener?.onViewRecycled(holder)
-        holder.getItemModel<IDataBindItemModel>(holder.layoutPosition)?.onViewRecycled(holder)
+        holder.getItemModel<IDataBindItemModel>(holder.layoutPosition)
+                ?.onViewRecycled(holder)
     }
 
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {

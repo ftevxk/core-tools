@@ -3,8 +3,8 @@
 package com.ftevxk.core.extension
 
 import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Context
-import org.jetbrains.anko.clipboardManager
 import java.security.MessageDigest
 import java.text.SimpleDateFormat
 import java.util.*
@@ -29,7 +29,8 @@ fun String?.getNotNullStr(vararg replace: String?): String {
  * 返回指定格式时间 - String转Date
  * @param format yyyy(年) MM(月) dd(日) HH(时) mm(分) ss(秒) EEEE(星期：星期X) EEE(星期：周X)
  */
-fun String.getFormatDate(format: String = "yyyy-MM-dd", locale: Locale = Locale.CHINA): Date? {
+fun String?.getFormatDate(format: String = "yyyy-MM-dd", locale: Locale = Locale.CHINA): Date? {
+    if (this.isNullOrEmpty()) return null
     return SimpleDateFormat(format, locale).parse(this)
 }
 
@@ -38,7 +39,13 @@ fun String.getFormatDate(format: String = "yyyy-MM-dd", locale: Locale = Locale.
  * @param format yyyy(年) MM(月) dd(日) HH(时) mm(分) ss(秒) EEEE(星期：星期X) EEE(星期：周X)
  */
 fun Any.getFormatString(format: String = "yyyy-MM-dd", locale: Locale = Locale.CHINA): String {
-    return SimpleDateFormat(format, locale).format(if (this is Date) this else Date())
+    return SimpleDateFormat(format, locale).format(
+            when (this) {
+                is Date -> this
+                is Calendar -> this.time
+                else -> Date()
+            }
+    )
 }
 
 /**
@@ -92,7 +99,8 @@ fun String.splitStr(maxLength: Int = 4 * 1024): Array<String> {
  */
 fun String.copyToClipboard(context: Context, label: String = "label"): Boolean {
     return try {
-        context.clipboardManager.setPrimaryClip(ClipData.newPlainText(label, this))
+        (context.getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager)
+                ?.setPrimaryClip(ClipData.newPlainText(label, this))
         true
     } catch (e: Exception) {
         e.printStackTrace()

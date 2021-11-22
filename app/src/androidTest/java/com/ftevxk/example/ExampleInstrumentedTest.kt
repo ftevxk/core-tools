@@ -5,7 +5,6 @@ import com.ftevxk.core.extension.dLog
 import com.ftevxk.core.extension.getSpStore
 import com.ftevxk.core.extension.putSpStore
 import com.ftevxk.core.extension.removeSpKey
-import com.ftevxk.example.activity.MainActivity
 import org.junit.Rule
 import org.junit.Test
 
